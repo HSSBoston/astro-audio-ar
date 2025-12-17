@@ -4,10 +4,6 @@ import numpy as np
 from chord_progression import *
 from constants import *
 
-
-# pprint.pprint(romanToChordTones)
-# pprint.pprint(romanToChordTonesMidi)
-
 # melody = stream.Part()
 # m1Chord = stream.Measure()
 #
@@ -38,9 +34,9 @@ numOfMeasures = 1
 part = stream.Part()
 
 if numOfMeasures == 1:
-    generateOneMeasureChordProgression(part, numOfChords)
+    part = generateOneMeasureChordProgression(part, numOfChords)
 if numOfMeasures == 2:
-    generateTwoMeasureChordProgression(part, numOfChords)
+    part = generateTwoMeasureChordProgression(part, numOfChords)
 
 part.show();
 

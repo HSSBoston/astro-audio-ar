@@ -71,3 +71,7 @@ romanToIndex = {
     "VI":  4,
     "VII": 5,
 }
+
+# pprint.pprint(romanToChordTones)
+# pprint.pprint(romanToChordTonesMidi)
+
