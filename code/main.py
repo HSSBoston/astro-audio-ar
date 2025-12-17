@@ -1,0 +1,613 @@
+from music21 import *
+import random, pprint
+import numpy as np
+
+KEY_CHOICE = "C"
+#PROGRESSION = ["I", "IV", "V", "I"]
+CHORD_CHOICES = ["I","II","IV","V","VI","VII",]
+RANDOM_SEED_CHORD = None #None or int
+rng = np.random.default_rng(seed=RANDOM_SEED_CHORD)
+
+P = np.array(
+    [[0.16, 0.16, 0.16, 0.2, 0.16, 0.16],
+     [0.1, 0.1, 0, 0.35, 0.1, 0.35],
+     [0.2, 0.2, 0.2, 0.2, 0.05, 0.15],
+     [0.4, 0, 0, 0.1, 0.4, 0.1],
+     [0, 0.3, 0.3, 0.3, 0.05, 0.05],
+     [1, 0, 0, 0, 0, 0]
+    ])
+
+k = key.Key(KEY_CHOICE)
+#print(k)
+
+if k.mode == "major":
+  sc = scale.MajorScale(KEY_CHOICE)
+else:
+  sc = scale.MinorScale(KEY_CHOICE)
+
+scalePitchNames = [p.nameWithOctave for p in sc.getPitches()]
+scaleMidi       = [p.midi           for p in sc.getPitches()]
+scalePitchNames = scalePitchNames[0:-1]
+scaleMidi       = scaleMidi[0:-1]
+#print(scalePitchNames)
+#print(scaleMidi)
+
+if k.mode == "major":
+    rn1 = roman.RomanNumeral("I", sc)
+    rn2 = roman.RomanNumeral("ii", sc)
+    rn4 = roman.RomanNumeral("IV", sc)
+    rn5 = roman.RomanNumeral("V", sc)
+    rn6 = roman.RomanNumeral("vi", sc)
+    rn7 = roman.RomanNumeral("viio", sc)
+else:
+    rn1 = roman.RomanNumeral("i", sc)
+    rn2 = roman.RomanNumeral("iio", sc)
+    rn4 = roman.RomanNumeral("iv", sc)
+    rn5 = roman.RomanNumeral("v", sc)
+    rn6 = roman.RomanNumeral("VI", sc)
+    rn7 = roman.RomanNumeral("VII", sc)
+
+romanToChordTones = {
+    "I":  [p.nameWithOctave for p in rn1.pitches],
+    "II": [p.nameWithOctave for p in rn2.pitches],
+    "IV": [p.nameWithOctave for p in rn4.pitches],
+    "V":  [p.nameWithOctave for p in rn5.pitches],
+    "VI": [p.nameWithOctave for p in rn6.pitches],
+    "VII":[p.nameWithOctave for p in rn7.pitches],
+    }
+romanToChordTonesMidi = {
+    "I":  [p.midi for p in rn1.pitches],
+    "II": [p.midi for p in rn2.pitches],
+    "IV": [p.midi for p in rn4.pitches],
+    "V":  [p.midi for p in rn5.pitches],
+    "VI": [p.midi for p in rn6.pitches],
+    "VII":[p.midi for p in rn7.pitches],
+    }
+romanToIndex = {
+    "I":   0,
+    "II":  1,
+    "IV":  2,
+    "V":   3,
+    "VI":  4,
+    "VII": 5,
+}
+
+# pprint.pprint(romanToChordTones)
+# pprint.pprint(romanToChordTonesMidi)
+
+# melody = stream.Part()
+# m1Chord = stream.Measure()
+#
+# m1Melody = stream.Measure()
+# m1Chord.timeSignature = meter.TimeSignature()
+# m1Melody.timeSignature = meter.TimeSignature()
+# m1Chord.keySignature = key.Key(KEY_CHOICE)
+# m1Melody.keySignature = key.Key(KEY_CHOICE)
+# m2Chord = stream.Measure()
+# m2Melody = stream.Measure()
+# m2Chord.rightBarLine = bar.Barline("final")
+# m2Melody.rightBarLine = bar.Barline("final")
+#
+# chords = stream.Part()
+
+randomInt = random.randint(0,1)
+
+# if randomInt <= 0.25:
+numOfChords = 4
+numOfMeasures = 2
+# elif randomInt <= 0.5:
+#     numOfChords = 2
+# elif randomInt <= 0.75:
+#     numOfChords = 3
+# else:
+#     numOfChords = 4
+
+part = stream.Part()
+
+
+if numOfMeasures == 1:
+    m1 = stream.Measure()
+    m1.TimeSignature = meter.TimeSignature()
+    m1.keySignature = key.Key(KEY_CHOICE)
+    temp = tempo.MetronomeMark("adagio")
+    m1.append(temp)
+    m1.rightBarLine = bar.Barline("final")
+
+    if numOfChords == 1:
+        chord1 = random.choice(CHORD_CHOICES)
+        print(romanToChordTones[chord1])
+
+        c1 = chord.Chord(romanToChordTones[chord1])
+        c1.quarterLength = 4
+        m1.append(oneChord)
+
+    if numOfChords == 2:
+        chord1 = random.choice(CHORD_CHOICES)
+        chord2 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord1]])
+
+        c1 = chord.Chord(romanToChordTones[chord1])
+        c1.quarterLength = 2
+        c2 = chord.Chord(romanToChordTones[chord2])
+        c2.quarterLength = 2
+        m1.append(c1)
+        m1.append(c2)
+
+    if numOfChords == 3:
+        chord1 = random.choice(CHORD_CHOICES)
+        chord2 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord1]])
+        chord3 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord2]])
+
+        c1 = chord.Chord(romanToChordTones[chord1])
+        c2 = chord.Chord(romanToChordTones[chord2])
+        c3 = chord.Chord(romanToChordTones[chord3])
+
+        randomInt = random.randint(0,1)
+        if randomInt <= 0.33:
+            c1.quarterLength = 2
+            c2.quarterLength = 1
+            c3.quarerLength = 1
+        elif randomInt <= 0.66:
+            c1.quarterLength = 1
+            c2.quarterLength = 2
+            c3.quarerLength = 1
+        else:
+            c1.quarterLength = 1
+            c2.quarterLength = 1
+            c3.quarerLength = 2
+
+        m1.append(c1)
+        m1.append(c2)
+        m1.append(c3)
+
+    if numOfChords == 4:
+
+        chord1 = random.choice(CHORD_CHOICES)
+        chord2 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord1]])
+        chord3 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord2]])
+        chord4 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord3]])
+
+        c1 = chord.Chord(romanToChordTones[chord1])
+        c2 = chord.Chord(romanToChordTones[chord2])
+        c3 = chord.Chord(romanToChordTones[chord3])
+        c4 = chord.Chord(romanToChordTones[chord4])
+
+        c1.quarterLength = 1
+        c2.quarterLength = 1
+        c3.quarterLength = 1
+        c4.quarterLength = 1
+
+        m1.append(c1)
+        m1.append(c2)
+        m1.append(c3)
+        m1.append(c4)
+
+    part.append(m1)
+    part.show()
+
+if numOfMeasures == 2:
+    m1 = stream.Measure()
+    m2 = stream.Measure()
+    m1.TimeSignature = meter.TimeSignature()
+#     temp = tempo.MetronomeMark("adagio")
+#     m1.append(temp)
+
+    #minimum 2 chords
+    if numOfChords == 2:
+
+        chord1 = random.choice(CHORD_CHOICES)
+        while chord1 == "VII":
+            chord1 = random.choice(CHORD_CHOICES)
+
+        chord2 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord1]])
+
+        c1 = chord.Chord(romanToChordTones[chord1])
+        c1.quarterLength = 4
+        c2 = chord.Chord(romanToChordTones[chord2])
+        c2.quarterLength = 4
+        m1.append(c1)
+        m2.append(c2)
+
+    if numOfChords == 3:
+
+        chord1 = random.choice(CHORD_CHOICES)
+        while chord1 == "VII":
+            chord1 = random.choice(CHORD_CHOICES)
+
+        chord2 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord1]])
+
+        chord3 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord2]])
+        while not (chord3 in ["I", "V", "VI"]):
+            chord3 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord2]])
+
+
+        c1 = chord.Chord(romanToChordTones[chord1])
+        c2 = chord.Chord(romanToChordTones[chord2])
+        c3 = chord.Chord(romanToChordTones[chord3])
+
+        randomInt = random.randint(0,1)
+        if randomInt <= 0.5:
+            c1.quarterLength = 2
+            c2.quarterLength = 2
+            c3.quarerLength = 4
+            m1.append([c1,c2])
+            m2.append(c3)
+        else:
+            c1.quarterLength = 4
+            c2.quarterLength = 2
+            c3.quarerLength = 2
+            m1.append(c1)
+            m2.append([c2,c3])
+
+
+    if numOfChords == 4:
+
+        chord1 = random.choice(CHORD_CHOICES)
+        while chord1 == "VII":
+            chord1 = random.choice(CHORD_CHOICES)
+
+        chord2 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord1]])
+        chord3 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord2]])
+        chord4 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord3]])
+        while not (chord4 in ["I", "V", "VI"]):
+            chord4 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord3]])
+
+
+        c1 = chord.Chord(romanToChordTones[chord1])
+        c2 = chord.Chord(romanToChordTones[chord2])
+        c3 = chord.Chord(romanToChordTones[chord3])
+        c4 = chord.Chord(romanToChordTones[chord4])
+
+        randomInt = random.randint(0,1)
+        if randomInt <= 0.5:
+            c1.quarterLength = 2
+            c2.quarterLength = 2
+            c3.quarterLength = 2
+            c4.quarterLength = 2
+        else:
+            randomInt = random.randint(0,1)
+            if randomInt <= 0.2:
+                c1.quarterLength = 1
+                c2.quarterLength = 1
+                c3.quarterLength = 2
+                c4.quarterLength = 4
+                m1.append([c1,c2,c3])
+                m2.append(c4)
+            elif randomInt <= 0.4:
+                c1.quarterLength = 2
+                c2.quarterLength = 1
+                c3.quarterLength = 1
+                c4.quarterLength = 4
+                m1.append([c1,c2,c3])
+                m2.append(c4)
+            elif randomInt <= 0.6:
+                c1.quarterLength = 1
+                c2.quarterLength = 2
+                c3.quarterLength = 1
+                c4.quarterLength = 4
+                m1.append([c1,c2,c3])
+                m2.append(c4)
+            elif randomInt <= 0.75:
+                c1.quarterLength = 4
+                c2.quarterLength = 1
+                c3.quarterLength = 1
+                c4.quarterLength = 2
+                m1.append(c1)
+                m2.append([c2,c3,c4])
+            elif randomInt <= 0.9:
+                c1.quarterLength = 4
+                c2.quarterLength = 1
+                c3.quarterLength = 2
+                c4.quarterLength = 1
+                m1.append(c1)
+                m2.append([c2,c3,c4])
+            else:
+                c1.quarterLength = 4
+                c2.quarterLength = 2
+                c3.quarterLength = 1
+                c4.quarterLength = 1
+                m1.append(c1)
+                m2.append([c2,c3,c4])
+
+
+    if numOfChords == 5:
+
+        chord1 = random.choice(CHORD_CHOICES)
+        while chord1 == "VII":
+            chord1 = random.choice(CHORD_CHOICES)
+
+        chord2 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord1]])
+        chord3 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord2]])
+        chord4 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord3]])
+        chord5 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord4]])
+        while not (chord5 in ["I", "V", "VI"]):
+            chord5 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord4]])
+
+
+        c1 = chord.Chord(romanToChordTones[chord1])
+        c2 = chord.Chord(romanToChordTones[chord2])
+        c3 = chord.Chord(romanToChordTones[chord3])
+        c4 = chord.Chord(romanToChordTones[chord4])
+        c5 = chord.Chord(romanToChordTones[chord5])
+
+        randomInt = random.randint(0,1)
+        if randomInt <= 0.17:
+            c1.quarterLength = 1
+            c2.quarterLength = 1
+            c3.quarterLength = 2
+            c4.quarterLength = 2
+            c5.quarterLength = 2
+            m1.append([c1,c2,c3])
+            m2.append([c4,c5])
+        elif randomInt <= 0.34:
+            c1.quarterLength = 1
+            c2.quarterLength = 2
+            c3.quarterLength = 1
+            c4.quarterLength = 2
+            c5.quarterLength = 2
+            m1.append([c1,c2,c3])
+            m2.append([c4,c5])
+        elif randomInt <= 0.51:
+            c1.quarterLength = 2
+            c2.quarterLength = 1
+            c3.quarterLength = 1
+            c4.quarterLength = 2
+            c5.quarterLength = 2
+            m1.append([c1,c2,c3])
+            m2.append([c4,c5])
+        elif randomInt <= 0.68:
+            c1.quarterLength = 2
+            c2.quarterLength = 2
+            c3.quarterLength = 1
+            c4.quarterLength = 1
+            c5.quarterLength = 2
+            m1.append([c1,c2])
+            m2.append([c3,c4,c5])
+        elif randomInt <= 0.85:
+            c1.quarterLength = 2
+            c2.quarterLength = 2
+            c3.quarterLength = 1
+            c4.quarterLength = 2
+            c5.quarterLength = 1
+            m1.append([c1,c2])
+            m2.append([c3,c4,c5])
+        else:
+            c1.quarterLength = 2
+            c2.quarterLength = 2
+            c3.quarterLength = 2
+            c4.quarterLength = 1
+            c5.quarterLength = 1
+            m1.append([c1,c2])
+            m2.append([c3,c4,c5])
+
+    if numOfChords == 6:
+
+        chord1 = random.choice(CHORD_CHOICES)
+        while chord1 == "VII":
+            chord1 = random.choice(CHORD_CHOICES)
+
+        chord2 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord1]])
+        chord3 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord2]])
+        chord4 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord3]])
+        chord5 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord4]])
+        chord6 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord5]])
+        while not (chord6 in ["I", "V", "VI"]):
+            chord6 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord5]])
+
+
+        c1 = chord.Chord(romanToChordTones[chord1])
+        c2 = chord.Chord(romanToChordTones[chord2])
+        c3 = chord.Chord(romanToChordTones[chord3])
+        c4 = chord.Chord(romanToChordTones[chord4])
+        c5 = chord.Chord(romanToChordTones[chord5])
+        c6 = chord.Chord(romanToChordTones[chord6])
+
+        randomInt = random.randint(0,1)
+
+        #ending 1 1 2
+        if randomInt <= 0.11:
+            c1.quarterLength = 1
+            c2.quarterLength = 1
+            c3.quarterLength = 2
+            c4.quarterLength = 1
+            c5.quarterLength = 1
+            c6.quarterLength = 2
+        elif randomInt <= 0.22:
+            c1.quarterLength = 1
+            c2.quarterLength = 2
+            c3.quarterLength = 1
+            c4.quarterLength = 1
+            c5.quarterLength = 1
+            c6.quarterLength = 2
+        elif randomInt <= 0.33:
+            c1.quarterLength = 2
+            c2.quarterLength = 1
+            c3.quarterLength = 1
+            c4.quarterLength = 1
+            c5.quarterLength = 1
+            c6.quarterLength = 2
+
+        #ending in 1 2 1
+        elif randomInt <= 0.44:
+            c1.quarterLength = 1
+            c2.quarterLength = 1
+            c3.quarterLength = 2
+            c4.quarterLength = 1
+            c5.quarterLength = 2
+            c6.quarterLength = 1
+        elif randomInt <= 0.55:
+            c1.quarterLength = 1
+            c2.quarterLength = 2
+            c3.quarterLength = 1
+            c4.quarterLength = 1
+            c5.quarterLength = 2
+            c6.quarterLength = 1
+        elif randomInt <= 0.66:
+            c1.quarterLength = 2
+            c2.quarterLength = 1
+            c3.quarterLength = 1
+            c4.quarterLength = 1
+            c5.quarterLength = 2
+            c6.quarterLength = 1
+
+        #ending in 2 1 1
+        elif randomInt <= 0.77:
+            c1.quarterLength = 1
+            c2.quarterLength = 1
+            c3.quarterLength = 2
+            c4.quarterLength = 2
+            c5.quarterLength = 1
+            c6.quarterLength = 1
+        elif randomInt <= 0.88:
+            c1.quarterLength = 1
+            c2.quarterLength = 2
+            c3.quarterLength = 1
+            c4.quarterLength = 2
+            c5.quarterLength = 1
+            c6.quarterLength = 1
+        else:
+            c1.quarterLength = 2
+            c2.quarterLength = 1
+            c3.quarterLength = 1
+            c4.quarterLength = 2
+            c5.quarterLength = 1
+            c6.quarterLength = 1
+
+        m1.append([c1,c2,c3])
+        m2.append([c4,c5,c6])
+
+    if numOfChords == 7:
+
+        chord1 = random.choice(CHORD_CHOICES)
+        while chord1 == "VII":
+            chord1 = random.choice(CHORD_CHOICES)
+
+        chord2 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord1]])
+        chord3 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord2]])
+        chord4 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord3]])
+        chord5 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord4]])
+        chord6 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord5]])
+        chord7 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord6]])
+        while not (chord7 in ["I", "V", "VI"]):
+            chord7 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord6]])
+
+
+        c1 = chord.Chord(romanToChordTones[chord1])
+        c2 = chord.Chord(romanToChordTones[chord2])
+        c3 = chord.Chord(romanToChordTones[chord3])
+        c4 = chord.Chord(romanToChordTones[chord4])
+        c5 = chord.Chord(romanToChordTones[chord5])
+        c6 = chord.Chord(romanToChordTones[chord6])
+        c7 = chord.Chord(romanToChordTones[chord7])
+
+        randomInt = random.randint(0,1)
+
+        if randomInt <= 0.25:
+            c1.quarterLength = 1
+            c2.quarterLength = 1
+            c3.quarterLength = 1
+            c4.quarterLength = 1
+            c5.quarterLength = 1
+            c6.quarterLength = 1
+            c7.quarterLength = 2
+            m1.append([c1,c2,c3,c4])
+            m2.append([c5,c6,c7])
+        elif randomInt <= 0.5:
+            c1.quarterLength = 1
+            c2.quarterLength = 1
+            c3.quarterLength = 1
+            c4.quarterLength = 1
+            c5.quarterLength = 2
+            c6.quarterLength = 1
+            c7.quarterLength = 1
+            m1.append([c1,c2,c3,c4])
+            m2.append([c5,c6,c7])
+        elif randomInt <= 0.75:
+            c1.quarterLength = 1
+            c2.quarterLength = 1
+            c3.quarterLength = 2
+            c4.quarterLength = 1
+            c5.quarterLength = 1
+            c6.quarterLength = 1
+            c7.quarterLength = 1
+            m1.append([c1,c2,c3])
+            m2.append([c4,c5,c6,c7])
+        else:
+            c1.quarterLength = 2
+            c2.quarterLength = 1
+            c3.quarterLength = 1
+            c4.quarterLength = 1
+            c5.quarterLength = 1
+            c6.quarterLength = 1
+            c7.quarterLength = 1
+            m1.append([c1,c2,c3])
+            m2.append([c4,c5,c6,c7])
+
+    if numOfChords == 8:
+
+        chord1 = random.choice(CHORD_CHOICES)
+        while chord1 == "VII":
+            chord1 = random.choice(CHORD_CHOICES)
+
+        chord2 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord1]])
+        chord3 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord2]])
+        chord4 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord3]])
+        chord5 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord4]])
+        chord6 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord5]])
+        chord7 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord6]])
+        chord8 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord7]])
+        while not (chord8 in ["I", "V", "VI"]):
+            chord8 = rng.choice(["I", "II", "IV", "V", "VI", "VII"], p=P[romanToIndex[chord7]])
+
+
+        c1 = chord.Chord(romanToChordTones[chord1])
+        c2 = chord.Chord(romanToChordTones[chord2])
+        c3 = chord.Chord(romanToChordTones[chord3])
+        c4 = chord.Chord(romanToChordTones[chord4])
+        c5 = chord.Chord(romanToChordTones[chord5])
+        c6 = chord.Chord(romanToChordTones[chord6])
+        c7 = chord.Chord(romanToChordTones[chord7])
+        c8 = chord.Chord(romanToChordTones[chord8])
+
+        c1.quarterLength = 1
+        c2.quarterLength = 1
+        c3.quarterLength = 1
+        c4.quarterLength = 1
+        c5.quarterLength = 1
+        c6.quarterLength = 1
+        c7.quarterLength = 1
+
+        m1.append([c1,c2,c3,c4])
+        m2.append([c5,c6,c7,c8])
+
+
+
+    part.append(m1)
+    part.append(m2)
+
+    part.show();
+
+
+
+
+
+
+
+
+
+# count = 0
+# for num in PROGRESSION:
+#   count += 1
+#   print(romanToChordTones[num])
+#   print(romanToChordTonesMidi[num])
+#   c = chord.Chord(romanToChordTones[num])
+#   c.quarterLength = 2
+#   if count <= 2:
+#     m1Chord.append(c)
+#   else:
+#     m2Chord.append(c)
+#
+# chords.append([m1Chord,m2Chord])
+# melody.append(note.Note("G"))
+# s = stream.Score([melody,chords])
+# s.show()
+
