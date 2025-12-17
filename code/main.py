@@ -1,8 +1,8 @@
 from music21 import *
 import random, pprint
 import numpy as np
+import constants import *
 from chord_progression import *
-from constants import *
 
 # melody = stream.Part()
 # m1Chord = stream.Measure()
