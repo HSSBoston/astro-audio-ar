@@ -41,7 +41,8 @@ if numOfMeasures == 1:
     temp = tempo.MetronomeMark("adagio")
     m1.append(temp)
     m1.rightBarLine = bar.Barline("final")
-    scorePart = generateOneMeasureChordProgression(scorePart, numOfChords)
+    print( len(scorePart) )
+#     scorePart = generateOneMeasureChordProgression(scorePart, numOfChords)
 if numOfMeasures == 2:
     m2 = stream.Measure()
     scorePart.append(m2)    
