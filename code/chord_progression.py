@@ -4,13 +4,7 @@ import numpy as np
 from constants import *
 
 def generateOneMeasureChordProgression(scorePart, numOfChords):
-    m1 = stream.Measure()
-    m1.TimeSignature = meter.TimeSignature()
-    m1.keySignature = key.Key(KEY_CHOICE)
-    temp = tempo.MetronomeMark("adagio")
-    m1.append(temp)
-    m1.rightBarLine = bar.Barline("final")
-
+    
     if numOfChords == 1:
         chord1 = random.choice(CHORD_CHOICES)
         print(romanToChordTones[chord1])
@@ -79,17 +73,11 @@ def generateOneMeasureChordProgression(scorePart, numOfChords):
         m1.append(c3)
         m1.append(c4)
 
-    scorePart.append(m1)
+
     return scorePart
 
 
 def generateTwoMeasureChordProgression(scorePart, numOfChords):
-    m1 = stream.Measure()
-    m2 = stream.Measure()
-    m1.TimeSignature = meter.TimeSignature()
-#     temp = tempo.MetronomeMark("adagio")
-#     m1.append(temp)
-
     #minimum 2 chords
     if numOfChords == 2:
 
@@ -478,8 +466,6 @@ def generateTwoMeasureChordProgression(scorePart, numOfChords):
         m1.append([c1,c2,c3,c4])
         m2.append([c5,c6,c7,c8])
 
-    scorePart.append(m1)
-    scorePart.append(m2)
     return scorePart
 
 

@@ -1,7 +1,7 @@
 from music21 import *
 import random, pprint
 import numpy as np
-import constants import *
+from constants import *
 from chord_progression import *
 
 # melody = stream.Part()
@@ -31,14 +31,23 @@ numOfMeasures = 1
 # else:
 #     numOfChords = 4
 
-part = stream.Part()
+scorePart = stream.Part()
+m1 = stream.Measure()
+m1.TimeSignature = meter.TimeSignature("4/4")
+m1.keySignature = key.Key(KEY_CHOICE)
+scorePart.append(m1)
 
 if numOfMeasures == 1:
-    part = generateOneMeasureChordProgression(part, numOfChords)
+    temp = tempo.MetronomeMark("adagio")
+    m1.append(temp)
+    m1.rightBarLine = bar.Barline("final")
+    scorePart = generateOneMeasureChordProgression(scorePart, numOfChords)
 if numOfMeasures == 2:
-    part = generateTwoMeasureChordProgression(part, numOfChords)
+    m2 = stream.Measure()
+    scorePart.append(m2)    
+    scorePart = generateTwoMeasureChordProgression(scorePart, numOfChords)
 
-part.show();
+scorePart.show()
 
 
 
