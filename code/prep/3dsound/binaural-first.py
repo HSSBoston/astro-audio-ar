@@ -3,16 +3,18 @@ import soundfile as sf
 from scipy.signal import fftconvolve
 from scipy.signal import resample_poly
 
-inputWav  = "io/helicopter-hovering-01"
-
-inputWavFileName  = inputWav + ".wav"
-outputWavFileName = inputWav + "-binaural.wav"
+inputWav = "io/helicopter-hovering-01.wav"
 
 hrtfLeft  = "hrtf/mit-kemar/elev0/L0e090a.wav"
 hrtfRight = "hrtf/mit-kemar/elev0/R0e090a.wav"
 
+elevation = hrtfLeft.split("/L")[1].split("e")[0]
+azimuth   = hrtfLeft.split("/L")[1].split("e")[1].split("a")[0]
+print(azimuth)
+outputWav = inputWav.split(".wav")[0] + "-" + elevation + "-" + azimuth + ".wav"
+
 # Load the input Wav file
-mono, sr_mono = sf.read(inputWavFileName)
+mono, sr_mono = sf.read(inputWav)
 
 # Make sure it is mono
 if mono.ndim > 1:
@@ -52,5 +54,5 @@ max_val = np.max(np.abs(stereo))
 if max_val > 0:
     stereo = stereo / max_val * 0.95
 
-sf.write(outputWavFileName, stereo, sr_mono)
-print("Saved as", outputWavFileName)
+sf.write(outputWav, stereo, sr_mono)
+print("Saved as", outputWav)
