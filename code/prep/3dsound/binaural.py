@@ -5,12 +5,11 @@ from scipy.signal import resample_poly
 
 inputWav = "io/helicopter-hovering-01.wav"
 
-hrtfLeft  = "hrtf/mit-kemar/elev0/L0e090a.wav"
-hrtfRight = "hrtf/mit-kemar/elev0/R0e090a.wav"
+hrtfLeft  = "hrtf/mit-kemar/elev0/L0e270a.wav"
+hrtfRight = "hrtf/mit-kemar/elev0/R0e270a.wav"
 
 elevation = hrtfLeft.split("/L")[1].split("e")[0]
 azimuth   = hrtfLeft.split("/L")[1].split("e")[1].split("a")[0]
-print(azimuth)
 outputWav = inputWav.split(".wav")[0] + "-" + elevation + "-" + azimuth + ".wav"
 
 # Load the input Wav file
