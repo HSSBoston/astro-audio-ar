@@ -40,27 +40,17 @@ if not (sr_mono == sr_left == sr_right):
     print("Resampled HRTF sampling rates")
     
 
-# --------------------------------------------------
-# 4. Convolve mono sound with each HRTF
-# --------------------------------------------------
+# Convolve the input sound with each HRTF
 left_out = fftconvolve(mono, hrtf_left, mode="full")
 right_out = fftconvolve(mono, hrtf_right, mode="full")
 
-# --------------------------------------------------
-# 5. Stack into stereo
-# --------------------------------------------------
+# Stack into stereo
 stereo = np.column_stack((left_out, right_out))
 
-# --------------------------------------------------
-# 6. Normalize so the sound does not clip
-# --------------------------------------------------
+# Normalize so the sound does not clip
 max_val = np.max(np.abs(stereo))
 if max_val > 0:
     stereo = stereo / max_val * 0.95
 
-# --------------------------------------------------
-# 7. Save output
-# --------------------------------------------------
 sf.write(outputWavFileName, stereo, sr_mono)
-
 print("Saved as", outputWavFileName)
