@@ -71,16 +71,9 @@ def synthesizeBinauralSequence(inputWav, outputWav,
     mono = toMono(mono)
 
     numSegments = len(directionList)
-    totalSamples = len(mono)
-
     mono = adjustSegmentLength(mono, numSegments, mode="trim")
 
-#     if totalSamples % numSegments != 0:
-#         raise ValueError(
-#             f"Input length in samples ({totalSamples}) is not evenly divisible "
-#             f"by the number of segments ({numSegments})."
-#         )
-
+    totalSamples = len(mono)
     chunkSamples = totalSamples // numSegments
 
     binauralChunks = []
@@ -111,7 +104,6 @@ def synthesizeBinauralSequence(inputWav, outputWav,
     finalStereo = normalizeAudio(finalStereo)
     sf.write(outputWav, finalStereo, srMono)
     print(f"Saved final output: {outputWav}")
-
 
 
 if __name__ == "__main__":
