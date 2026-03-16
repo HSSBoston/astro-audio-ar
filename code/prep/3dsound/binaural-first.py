@@ -3,14 +3,16 @@ import soundfile as sf
 from scipy.signal import fftconvolve
 from scipy.signal import resample_poly
 
-inputWavFile  = "io/applause-8.wav"
-outputWavFile = "io/applause-8-binaural.wav"
+inputWav  = "io/helicopter-hovering-01"
+
+inputWavFileName  = inputWav + ".wav"
+outputWavFileName = inputWav + "-binaural.wav"
 
 hrtfLeft  = "hrtf/mit-kemar/elev0/L0e090a.wav"
 hrtfRight = "hrtf/mit-kemar/elev0/R0e090a.wav"
 
 # Load the input Wav file
-mono, sr_mono = sf.read(inputWavFile)
+mono, sr_mono = sf.read(inputWavFileName)
 
 # Make sure it is mono
 if mono.ndim > 1:
@@ -26,19 +28,16 @@ if hrtf_left.ndim > 1:
 if hrtf_right.ndim > 1:
     hrtf_right = hrtf_right[:, 0]
 
-# --------------------------------------------------
-# 3. Check sample rates
-# --------------------------------------------------
+# Check sampling rates
 if not (sr_mono == sr_left == sr_right):
     print("Input sampling rate:", sr_mono)
     print("HRTF L sampling rate:", sr_left)
     print("HRTF R sampling rate:", sr_right)
-    print("Resampling the sampling rates of HRTFs")
     if sr_left != sr_mono:
         hrtf_left = resample_poly(hrtf_left, sr_mono, sr_left)
     if sr_right != sr_mono:
         hrtf_right = resample_poly(hrtf_right, sr_mono, sr_right)
-#    raise ValueError("Sample rates must match for mono sound and HRTFs.")
+    print("Resampled HRTF sampling rates")
     
 
 # --------------------------------------------------
@@ -62,6 +61,6 @@ if max_val > 0:
 # --------------------------------------------------
 # 7. Save output
 # --------------------------------------------------
-sf.write(outputWavFile, stereo, sr_mono)
+sf.write(outputWavFileName, stereo, sr_mono)
 
-print("Done! Saved as", outputWavFile)
+print("Saved as", outputWavFileName)
