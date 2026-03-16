@@ -4,16 +4,12 @@ import soundfile as sf
 from scipy.signal import fftconvolve, resample_poly
 
 
-# --------------------------------------------------
-# 1. Settings
-# --------------------------------------------------
 stream_sr = 48000
 blocksize = 512
 switch_interval_sec = 1.0
 
 mono_wav_path = "io/helicopter-hovering-01.wav"
 
-# List your HRIR pairs here
 hrir_paths = [
     ("hrtf/mit-kemar/elev0/L0e090a.wav",  "hrtf/mit-kemar/elev0/R0e090a.wav"),
     ("hrtf/mit-kemar/elev0/L0e060a.wav",  "hrtf/mit-kemar/elev0/R0e060a.wav"),
@@ -24,9 +20,6 @@ hrir_paths = [
 ]
 
 
-# --------------------------------------------------
-# 2. Helper functions
-# --------------------------------------------------
 def to_mono(x):
     if x.ndim > 1:
         return x[:, 0]
