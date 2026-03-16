@@ -1,6 +1,5 @@
-import numpy as np
-import sounddevice as sd
-import soundfile as sf
+import time, numpy as np
+import sounddevice as sd, soundfile as sf
 from scipy.signal import fftconvolve, resample_poly
 
 
@@ -162,12 +161,14 @@ def resize_tail(old_tail, new_length):
 # --------------------------------------------------
 # 9. Output callback
 # --------------------------------------------------
-def callback(outdata, frames, time, status):
+def callback(outdata, frames, timeCallback, status):
     global samples_until_switch
     global active_pair_index
     global hrir_left, hrir_right
     global tail_left, tail_right
 
+    callback_start = time.perf_counter()
+    
     if status:
         print(status)
 
@@ -204,9 +205,31 @@ def callback(outdata, frames, time, status):
     outdata[:, 0] = output_stereo[:, 0]
     outdata[:, 1] = output_stereo[:, 1]
 
+    # --------------------------------------------------
+    # 10. Callback timing / overrun detection
+    # --------------------------------------------------
+    elapsed = time.perf_counter() - callback_start
+    block_time = frames / stream_sr
+
+    if elapsed > block_time:
+        overrun_count += 1
+        print(
+            f"WARNING: callback overrun #{overrun_count} | "
+            f"elapsed={elapsed*1000:.3f} ms, "
+            f"budget={block_time*1000:.3f} ms, "
+            f"ratio={elapsed/block_time:.2f}x"
+        )
+    elif elapsed > 0.9 * block_time:
+        near_limit_count += 1
+        print(
+            f"NOTICE: callback near limit #{near_limit_count} | "
+            f"elapsed={elapsed*1000:.3f} ms, "
+            f"budget={block_time*1000:.3f} ms, "
+            f"usage={100*elapsed/block_time:.1f}%"
+        )
 
 # --------------------------------------------------
-# 10. Start stream
+# 11. Start stream
 # --------------------------------------------------
 with sd.OutputStream(
     samplerate=stream_sr,
