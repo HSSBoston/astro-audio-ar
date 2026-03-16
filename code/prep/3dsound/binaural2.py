@@ -1,138 +1,136 @@
+import os
 import numpy as np
 import soundfile as sf
 from scipy.signal import fftconvolve, resample_poly
 
-# --------------------------------------------------
-# Helper functions
-# --------------------------------------------------
 
-def to_mono(x):
-    """Convert audio to mono if it has multiple channels."""
-    if x.ndim > 1:
-        return x[:, 0]
-    return x
+def toMono(audio):
+    if audio.ndim > 1:
+        return audio[:, 0]
+    return audio
 
-def load_hrir(path, target_sr):
-    """
-    Load one HRIR WAV file and resample it to target_sr if needed.
-    """
+
+def loadHrir(path, targetSr):
     hrir, sr = sf.read(path)
-    hrir = to_mono(hrir)
-
-    if sr != target_sr:
-        hrir = resample_poly(hrir, target_sr, sr)
-
+    hrir = toMono(hrir)
+    if sr != targetSr:
+        hrir = resample_poly(hrir, targetSr, sr)
     return hrir
 
-def binauralize_chunk(mono_chunk, hrir_left, hrir_right):
-    """
-    Convolve one mono chunk with left/right HRIRs and return stereo output.
-    """
-    left = fftconvolve(mono_chunk, hrir_left, mode="full")
-    right = fftconvolve(mono_chunk, hrir_right, mode="full")
-    stereo = np.column_stack((left, right))
+
+def buildKemarPath(basePath, ear, elevation, azimuth):
+    folder = os.path.join(basePath, f"elev{elevation}")
+    filename = f"{ear}{elevation}e{azimuth:03d}a.wav"
+    path = os.path.join(folder, filename)
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"File not found: {path}")
+    return path
+
+
+def normalizeAudio(stereo):
+    maxVal = np.max(np.abs(stereo))
+    if maxVal > 0:
+        stereo = 0.95 * stereo / maxVal
     return stereo
 
-# --------------------------------------------------
-# 1. Load the input mono WAV
-# --------------------------------------------------
 
-input_path = "input.wav"
-mono, sr_mono = sf.read(input_path)
-mono = to_mono(mono)
+# "trim" -> remove leftover samples at the end
+# "pad"  -> add zeros at the end
+#
+def adjustSegmentLength(mono, numSegments, mode="trim"):
+    if mode not in ["trim", "pad"]:
+        raise ValueError("Mode must be either 'trim' or 'pad'")
 
-# --------------------------------------------------
-# 2. Make sure it is about 16 seconds long
-# --------------------------------------------------
+    totalSamples = len(mono)
+    remainder = totalSamples % numSegments
 
-expected_duration_sec = 16
-expected_samples = expected_duration_sec * sr_mono
+    if remainder == 0:
+        return mono
 
-if len(mono) < expected_samples:
-    raise ValueError(
-        f"Input audio is too short. Need at least {expected_duration_sec} seconds."
+    if mode == "trim":
+        newLength = totalSamples - remainder
+        print(
+            f"Trimming {remainder} sample(s) from the end "
+            f"so the audio splits evenly into {numSegments} segments."
+        )
+        return mono[:newLength]
+
+    if mode == "pad":
+        padAmount = numSegments - remainder
+        print(
+            f"Padding {padAmount} zero sample(s) at the end "
+            f"so the audio splits evenly into {numSegments} segments."
+        )
+        return np.pad(mono, (0, padAmount), mode="constant")
+
+
+def synthesizeBinauralSequence(inputWav, outputWav,
+                               hrirBasePath, directionList,
+                               saveIndividualClips=False):
+    mono, srMono = sf.read(inputWav)
+    mono = toMono(mono)
+
+    numSegments = len(directionList)
+    totalSamples = len(mono)
+
+    mono = adjustSegmentLength(mono, numSegments, mode="trim")
+
+#     if totalSamples % numSegments != 0:
+#         raise ValueError(
+#             f"Input length in samples ({totalSamples}) is not evenly divisible "
+#             f"by the number of segments ({numSegments})."
+#         )
+
+    chunkSamples = totalSamples // numSegments
+
+    binauralChunks = []
+
+    for i, (elevation, azimuth) in enumerate(directionList):
+        start = i * chunkSamples
+        end = (i + 1) * chunkSamples
+        monoChunk = mono[start:end]
+
+        leftPath  = buildKemarPath(hrirBasePath, "L", elevation, azimuth)
+        rightPath = buildKemarPath(hrirBasePath, "R", elevation, azimuth)
+
+        hrirLeft  = loadHrir(leftPath,  srMono)
+        hrirRight = loadHrir(rightPath, srMono)
+
+        left  = fftconvolve(monoChunk, hrirLeft,  mode="full")[:len(monoChunk)]
+        right = fftconvolve(monoChunk, hrirRight, mode="full")[:len(monoChunk)]
+        stereoChunk = np.column_stack((left, right))
+
+        binauralChunks.append(stereoChunk)
+
+        if saveIndividualClips:
+            clipName = f"clip_{i+1}_e{elevation}_a{azimuth}.wav"
+            sf.write(clipName, normalizeAudio(stereoChunk), srMono)
+            print(f"Saved individual clip: {clipName}")
+
+    finalStereo = np.concatenate(binauralChunks, axis=0)
+    finalStereo = normalizeAudio(finalStereo)
+    sf.write(outputWav, finalStereo, srMono)
+    print(f"Saved final output: {outputWav}")
+
+
+
+if __name__ == "__main__":
+    inputWav = "io/helicopter-hovering-01.wav"
+    outputWav = "io/helicopter-hovering-01-move2.wav"
+    hrirBasePath = "hrtf/mit-kemar"
+
+    directionList = [
+        (0, 90),
+        (0, 45),
+        (0, 0),
+        (0, 315),
+        (0, 275)
+    ]
+
+    synthesizeBinauralSequence(
+        inputWav = inputWav,
+        outputWav = outputWav,
+        hrirBasePath = hrirBasePath,
+        directionList = directionList,
+        saveIndividualClips = False
     )
-
-# If the file is longer than 16 seconds, keep only the first 16 seconds.
-mono = mono[:expected_samples]
-
-# --------------------------------------------------
-# 3. Define the 4 target elevations
-# --------------------------------------------------
-
-azimuth = 90
-elevations = [0, 30, 60, 90]
-
-# --------------------------------------------------
-# 4. Map each elevation to its HRIR files
-#    Change these filenames if your folder uses different names.
-# --------------------------------------------------
-
-hrir_files = {
-    0: {
-        "left":  "hrtf/mit-kemar/elev0/L0e090a.wav",
-        "right": "hrtf/mit-kemar/elev0/R0e090a.wav",
-    },
-    30: {
-        "left":  "hrtf/mit-kemar/elev30/L30e090a.wav",
-        "right": "hrtf/mit-kemar/elev30/R30e090a.wav",
-    },
-    60: {
-        "left":  "hrtf/mit-kemar/elev60/L60e090a.wav",
-        "right": "hrtf/mit-kemar/elev60/R60e090a.wav",
-    },
-    90: {
-        "left":  "hrtf/mit-kemar/elev90/L90e090a.wav",
-        "right": "hrtf/mit-kemar/elev90/R90e090a.wav",
-    },
-}
-
-# --------------------------------------------------
-# 5. Split the input into four 4-second chunks
-# --------------------------------------------------
-
-chunk_duration_sec = 4
-chunk_samples = chunk_duration_sec * sr_mono
-
-chunks = [
-    mono[0 * chunk_samples : 1 * chunk_samples],
-    mono[1 * chunk_samples : 2 * chunk_samples],
-    mono[2 * chunk_samples : 3 * chunk_samples],
-    mono[3 * chunk_samples : 4 * chunk_samples],
-]
-
-# --------------------------------------------------
-# 6. Binauralize each chunk with a different elevation
-# --------------------------------------------------
-
-binaural_chunks = []
-
-for chunk, elev in zip(chunks, elevations):
-    left_hrir = load_hrir(hrir_files[elev]["left"], sr_mono)
-    right_hrir = load_hrir(hrir_files[elev]["right"], sr_mono)
-
-    stereo_chunk = binauralize_chunk(chunk, left_hrir, right_hrir)
-    binaural_chunks.append(stereo_chunk)
-
-# --------------------------------------------------
-# 7. Concatenate all four stereo chunks
-# --------------------------------------------------
-
-final_stereo = np.concatenate(binaural_chunks, axis=0)
-
-# --------------------------------------------------
-# 8. Normalize to avoid clipping
-# --------------------------------------------------
-
-max_val = np.max(np.abs(final_stereo))
-if max_val > 0:
-    final_stereo = 0.95 * final_stereo / max_val
-
-# --------------------------------------------------
-# 9. Save the final output
-# --------------------------------------------------
-
-output_path = "binaural_elevation_sequence.wav"
-sf.write(output_path, final_stereo, sr_mono)
-
-print(f"Saved: {output_path}")
