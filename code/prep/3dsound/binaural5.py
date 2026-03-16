@@ -8,7 +8,7 @@ stream_sr = 48000
 blocksize = 512
 switch_interval_sec = 1.0
 
-mono_wav_path = "io/helicopter-hovering-01.wav"
+mono_wav_path = "io/bootes.wav"
 
 hrir_paths = [
     ("hrtf/mit-kemar/elev0/L0e090a.wav",  "hrtf/mit-kemar/elev0/R0e090a.wav"),

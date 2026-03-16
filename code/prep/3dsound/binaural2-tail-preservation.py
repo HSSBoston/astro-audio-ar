@@ -64,6 +64,40 @@ def adjustSegmentLength(mono, numSegments, mode="trim"):
         return np.pad(mono, (0, padAmount), mode="constant")
 
 
+# ADDED: safely resize tail buffers when HRIR lengths differ slightly
+def resizeTail(oldTail, newLength):
+    currentLength = len(oldTail)
+
+    if currentLength == newLength:
+        return oldTail
+
+    if currentLength < newLength:
+        return np.pad(oldTail, (0, newLength - currentLength), mode="constant")
+
+    return oldTail[:newLength]
+
+
+# ADDED: process one chunk while preserving overlap-add tails
+def convolveChunkWithTail(monoChunk, hrirLeft, hrirRight, tailLeft, tailRight):
+    convLeft = fftconvolve(monoChunk, hrirLeft, mode="full")
+    convRight = fftconvolve(monoChunk, hrirRight, mode="full")
+
+    # ADDED: add previous tail into the beginning of this chunk's convolution
+    convLeft[:len(tailLeft)] += tailLeft
+    convRight[:len(tailRight)] += tailRight
+
+    # Keep exactly one chunk of output now
+    outLeft = convLeft[:len(monoChunk)]
+    outRight = convRight[:len(monoChunk)]
+
+    # ADDED: save leftover tail for the next chunk
+    newTailLeft = convLeft[len(monoChunk):]
+    newTailRight = convRight[len(monoChunk):]
+
+    stereoChunk = np.column_stack((outLeft, outRight))
+    return stereoChunk, newTailLeft, newTailRight
+
+
 def synthesizeBinauralSequence(inputWav, outputWav,
                                hrirBasePath, directionList,
                                saveIndividualClips=False):
@@ -78,20 +112,28 @@ def synthesizeBinauralSequence(inputWav, outputWav,
 
     binauralChunks = []
 
+    # ADDED: initialize tails once and carry them across HRIR switches
+    tailLeft = np.zeros(0, dtype=np.float32)
+    tailRight = np.zeros(0, dtype=np.float32)
+
     for i, (elevation, azimuth) in enumerate(directionList):
         start = i * chunkSamples
         end = (i + 1) * chunkSamples
         monoChunk = mono[start:end]
 
-        leftPath  = buildKemarPath(hrirBasePath, "L", elevation, azimuth)
+        leftPath = buildKemarPath(hrirBasePath, "L", elevation, azimuth)
         rightPath = buildKemarPath(hrirBasePath, "R", elevation, azimuth)
 
-        hrirLeft  = loadHrir(leftPath,  srMono)
+        hrirLeft = loadHrir(leftPath, srMono)
         hrirRight = loadHrir(rightPath, srMono)
 
-        left  = fftconvolve(monoChunk, hrirLeft,  mode="full")[:len(monoChunk)]
-        right = fftconvolve(monoChunk, hrirRight, mode="full")[:len(monoChunk)]
-        stereoChunk = np.column_stack((left, right))
+        # ADDED: preserve tail across HRIR switches
+        tailLeft = resizeTail(tailLeft, len(hrirLeft) - 1)
+        tailRight = resizeTail(tailRight, len(hrirRight) - 1)
+
+        stereoChunk, tailLeft, tailRight = convolveChunkWithTail(
+            monoChunk, hrirLeft, hrirRight, tailLeft, tailRight
+        )
 
         binauralChunks.append(stereoChunk)
 
@@ -101,6 +143,16 @@ def synthesizeBinauralSequence(inputWav, outputWav,
             print(f"Saved individual clip: {clipName}")
 
     finalStereo = np.concatenate(binauralChunks, axis=0)
+
+    # OPTIONAL BUT USEFUL:
+    # append the final leftover tail so the last HRIR does not get cut off
+    if len(tailLeft) > 0 or len(tailRight) > 0:
+        maxTailLen = max(len(tailLeft), len(tailRight))
+        paddedTailLeft = np.pad(tailLeft, (0, maxTailLen - len(tailLeft)), mode="constant")
+        paddedTailRight = np.pad(tailRight, (0, maxTailLen - len(tailRight)), mode="constant")
+        finalTail = np.column_stack((paddedTailLeft, paddedTailRight))
+        finalStereo = np.concatenate((finalStereo, finalTail), axis=0)
+
     finalStereo = normalizeAudio(finalStereo)
     sf.write(outputWav, finalStereo, srMono)
     print(f"Saved final output: {outputWav}")
@@ -123,9 +175,9 @@ if __name__ == "__main__":
     ]
 
     synthesizeBinauralSequence(
-        inputWav = inputWav,
-        outputWav = outputWav,
-        hrirBasePath = hrirBasePath,
-        directionList = directionList,
-        saveIndividualClips = False
+        inputWav=inputWav,
+        outputWav=outputWav,
+        hrirBasePath=hrirBasePath,
+        directionList=directionList,
+        saveIndividualClips=False
     )

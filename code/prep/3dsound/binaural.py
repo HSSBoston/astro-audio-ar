@@ -2,10 +2,10 @@ import numpy as np
 import soundfile as sf
 from scipy.signal import fftconvolve, resample_poly
 
-inputWav = "io/helicopter-hovering-01.wav"
+inputWav = "io/bootes.wav"
 
-hrtfLeft  = "hrtf/mit-kemar/elev90/L90e000a.wav"
-hrtfRight = "hrtf/mit-kemar/elev90/R90e000a.wav"
+hrtfLeft  = "hrtf/mit-kemar/elev0/L0e090a.wav"
+hrtfRight = "hrtf/mit-kemar/elev0/R0e090a.wav"
 
 elevation = hrtfLeft.split("/L")[1].split("e")[0]
 azimuth   = hrtfLeft.split("/L")[1].split("e")[1].split("a")[0]
