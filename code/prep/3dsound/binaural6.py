@@ -9,7 +9,7 @@ from scipy.signal import fftconvolve, resample_poly
 # ==================================================
 # 1. Settings
 # ==================================================
-stream_sr = 48000
+stream_sr = 44100
 blocksize = 512
 
 mono_wav_path = "io/bootes.wav"
