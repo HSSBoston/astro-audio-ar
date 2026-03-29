@@ -1,6 +1,7 @@
 .DS_Store
 
-input/
+data/
+io/
 hrtf/
 
 # Byte-compiled / optimized / DLL files
