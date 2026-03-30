@@ -5,7 +5,7 @@ from scipy.stats import binomtest
 csvPath = "data/responses.csv"
 
 beforeCol = "Before this survey, had you ever felt or perceived any connection between celestial objects and musical expression?"
-afterCol = "Based on your experience listening to several musical pieces translated from constellations, do you feel or perceive a connection between constellations and musical expression? "
+afterCol  = "Based on your experience listening to several musical pieces translated from constellations, do you feel or perceive a connection between constellations and musical expression? "
 
 beforePositive = {"Yes", "Somewhat yes"}
 afterPositive  = {"Strongly agree", "Agree"}
