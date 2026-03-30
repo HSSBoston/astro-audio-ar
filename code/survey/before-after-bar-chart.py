@@ -28,7 +28,7 @@ for bar, value in zip(bars, values):
 
 ax.set_ylabel("Participants perceiving a connection (%)")
 ax.set_ylim(0, 100)
-ax.set_title("Before–After Perception Transitions\nExact McNemar test: p < 0.001")
+ax.set_title("Before–After Perception Transitions (n=114)\nMcNemar test: p < 0.001")
 # ax.set_title("Perceived Connection Before vs After")
 plt.tight_layout()
 plt.show()

@@ -15,7 +15,8 @@ nPaired = matrix.sum()
 pctMatrix = 100 * matrix / nPaired
 
 fig, ax = plt.subplots(figsize=(5.2, 4.5))
-im = ax.imshow(pctMatrix)
+im = ax.imshow(pctMatrix, cmap="Blues", vmin=0, vmax=100)
+# im = ax.imshow(pctMatrix)
 
 ax.set_xticks([0, 1])
 ax.set_yticks([0, 1])
@@ -30,6 +31,6 @@ for i in range(2):
                 fontweight="bold", fontsize=11)
 
 # ax.set_title("Before–After Perception Transitions")
-ax.set_title("Before–After Perception Transitions\nExact McNemar test: p < 0.001")
+ax.set_title("Before–After Perception Transitions (n=114)\nMcNemar test: p < 0.001")
 plt.tight_layout()
 plt.show()
