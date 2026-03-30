@@ -49,23 +49,31 @@ noMusicGroup = data[data[musicCol] == "No"]["accuracy"]
 
 # Astronomy groups
 lowAstronomyGroup = data[
-    data[astronomyCol].isin(["Not knowledgeable", "Slightly knowledgeable"])
-]["accuracy"]
+    data[astronomyCol].isin([
+        "Not knowledgeable at all (novice)",
+        "Slightly knowledgeable"])
+    ]["accuracy"]
 
 highAstronomyGroup = data[
-    data[astronomyCol].isin(["Moderately knowledgeable", "Very knowledgeable"])
-]["accuracy"]
+    data[astronomyCol].isin([
+        "Moderately knowledgeable",
+        "Very knowledgeable (expert)"])
+    ]["accuracy"]
 
 # Combined groups
 highAstronomyWithMusicGroup = data[
     (data[musicCol] == "Yes")
-    & (data[astronomyCol].isin(["Moderately knowledgeable", "Very knowledgeable"]))
-]["accuracy"]
+    & (data[astronomyCol].isin([
+        "Moderately knowledgeable",
+        "Very knowledgeable (expert)"]))
+    ]["accuracy"]
 
 lowAstronomyNoMusicGroup = data[
     (data[musicCol] == "No")
-    & (data[astronomyCol].isin(["Not knowledgeable", "Slightly knowledgeable"]))
-]["accuracy"]
+    & (data[astronomyCol].isin([
+        "Not knowledgeable at all (novice)",
+        "Slightly knowledgeable"]))
+    ]["accuracy"]
 
 # Welch's two-sample t-tests (equal_var=False)
 # This does not assume equal variance.
