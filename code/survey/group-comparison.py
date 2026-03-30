@@ -77,7 +77,7 @@ def computeCohensD(group1, group2):
     return cohensD
 
 musicCohensD = computeCohensD(musicGroup, noMusicGroup)
-astronomyCohensD = computeCohensD(lowAstronomyGroup, highAstronomyGroup)
+astronomyCohensD = computeCohensD(highAstronomyGroup, lowAstronomyGroup)
 
 # Print results
 print("Music vs No Music")
@@ -85,6 +85,8 @@ print("nMusic =", len(musicGroup))
 print("nNoMusic =", len(noMusicGroup))
 print("meanMusic =", musicGroup.mean())
 print("meanNoMusic =", noMusicGroup.mean())
+print("sdMusic =", musicGroup.std())
+print("sdNoMusic =", noMusicGroup.std())
 print("tStat =", musicTest.statistic)
 print("pValue =", musicTest.pvalue)
 print("cohensD =", musicCohensD)
@@ -95,6 +97,8 @@ print("nLowAstronomy =", len(lowAstronomyGroup))
 print("nHighAstronomy =", len(highAstronomyGroup))
 print("meanLowAstronomy =", lowAstronomyGroup.mean())
 print("meanHighAstronomy =", highAstronomyGroup.mean())
+print("stdLowAstronomy =", lowAstronomyGroup.std())
+print("stdHighAstronomy =", highAstronomyGroup.std())
 print("tStat =", astronomyTest.statistic)
 print("pValue =", astronomyTest.pvalue)
 print("cohensD =", astronomyCohensD)
