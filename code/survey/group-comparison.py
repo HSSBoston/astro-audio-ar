@@ -1,3 +1,4 @@
+import math
 import pandas as pd
 from scipy import stats
 
@@ -62,16 +63,41 @@ highAstronomyGroup = data[
 musicTest = stats.ttest_ind(musicGroup, noMusicGroup, equal_var=False)
 astronomyTest = stats.ttest_ind(lowAstronomyGroup, highAstronomyGroup, equal_var=False)
 
+def computeCohensD(group1, group2):
+    n1 = len(group1)
+    n2 = len(group2)
+
+    mean1 = group1.mean()
+    mean2 = group2.mean()
+
+    sd1 = group1.std(ddof=1)
+    sd2 = group2.std(ddof=1)
+
+    pooledVariance = ((n1 - 1) * sd1**2 + (n2 - 1) * sd2**2) / (n1 + n2 - 2)
+    pooledSd = math.sqrt(pooledVariance)
+
+    cohensD = (mean1 - mean2) / pooledSd
+    return cohensD
+
+musicCohensD = computeCohensD(musicGroup, noMusicGroup)
+astronomyCohensD = computeCohensD(lowAstronomyGroup, highAstronomyGroup)
+
 # Print results
 print("Music vs No Music")
 print("nMusic =", len(musicGroup))
 print("nNoMusic =", len(noMusicGroup))
+print("meanMusic =", musicGroup.mean())
+print("meanNoMusic =", noMusicGroup.mean())
 print("tStat =", musicTest.statistic)
 print("pValue =", musicTest.pvalue)
+print("cohensD =", musicCohensD)
 print()
 
 print("Low vs Higher Astronomy Knowledge")
 print("nLowAstronomy =", len(lowAstronomyGroup))
 print("nHighAstronomy =", len(highAstronomyGroup))
+print("meanLowAstronomy =", lowAstronomyGroup.mean())
+print("meanHighAstronomy =", highAstronomyGroup.mean())
 print("tStat =", astronomyTest.statistic)
 print("pValue =", astronomyTest.pvalue)
+print("cohensD =", astronomyCohensD)
