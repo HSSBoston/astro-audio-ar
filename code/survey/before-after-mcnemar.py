@@ -33,7 +33,7 @@ df["afterBin"]  = df[afterCol].apply(toBinaryAfter)
 
 paired = df.dropna(subset=["beforeBin", "afterBin"]).copy()
 paired["beforeBin"] = paired["beforeBin"].astype(int)
-paired["afterBin"] = paired["afterBin"].astype(int)
+paired["afterBin"]  = paired["afterBin"].astype(int)
 
 # 2x2 table:
 #                after=1   after=0
