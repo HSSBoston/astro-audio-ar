@@ -92,12 +92,19 @@ def getSignificanceLabel(pValue):
     return "ns"
 
 def addSignificanceBracket(ax, x1, x2, y, h, label):
-    ax.plot([x1, x1, x2, x2], [y, y + h, y + h, y], linewidth=1.2, color="black")
-    ax.text((x1 + x2) / 2, y + h + 0.8, label, ha="center", va="bottom", fontsize=10)
+    ax.plot([x1, x1, x2, x2], [y, y + h, y + h, y], linewidth=1.1, color="black")
+    ax.text(
+        (x1 + x2) / 2,
+        y + h + 0.4,
+        label,
+        ha="center",
+        va="bottom",
+        fontsize=10
+    )
 
 groupNames = ["Music", "Astronomy", "Combined"]
-leftBarLabels = ["Music", "Higher knowledge", "Higher astro + music"]
-rightBarLabels = ["No music", "Lower knowledge", "Lower astro + no music"]
+leftBarLabels = ["Music", "Higher\nknowledge", "Higher astro\n+\nmusic"]
+rightBarLabels = ["No music", "Lower\nknowledge", "Lower astro\n+\nno music"]
 
 leftMeans = [
     getMeanPercent(musicGroup),
@@ -123,6 +130,18 @@ rightSds = [
     getSdPercent(lowAstronomyNoMusicGroup),
 ]
 
+leftNs = [
+    len(musicGroup),
+    len(highAstronomyGroup),
+    len(highAstronomyWithMusicGroup),
+]
+
+rightNs = [
+    len(noMusicGroup),
+    len(lowAstronomyGroup),
+    len(lowAstronomyNoMusicGroup),
+]
+
 pValues = [
     musicTest.pvalue,
     astronomyTest.pvalue,
@@ -132,16 +151,16 @@ pValues = [
 significanceLabels = [getSignificanceLabel(pValue) for pValue in pValues]
 
 x = np.arange(len(groupNames))
-barWidth = 0.32
+barWidth = 0.28
 
-fig, ax = plt.subplots(figsize=(8.6, 5.2))
+fig, ax = plt.subplots(figsize=(7.5, 4.2))
 
 leftBars = ax.bar(
     x - barWidth / 2,
     leftMeans,
     barWidth,
     yerr=leftSds,
-    capsize=4,
+    capsize=3,
     label="Group 1"
 )
 
@@ -150,19 +169,12 @@ rightBars = ax.bar(
     rightMeans,
     barWidth,
     yerr=rightSds,
-    capsize=4,
+    capsize=3,
     label="Group 2"
 )
 
-ax.axhline(50, linestyle="--", linewidth=1.2, color="black")
-ax.text(
-    len(groupNames) - 0.15,
-    51.2,
-    "Chance level (50%)",
-    ha="right",
-    va="bottom",
-    fontsize=9
-)
+offset = 1.2
+height = 1.0
 
 for i in range(len(x)):
     leftX = x[i] - barWidth / 2
@@ -172,69 +184,87 @@ for i in range(len(x)):
         ax,
         leftX,
         rightX,
-        topY + 1.5,
-        1.8,
+        topY + offset,
+        height,
         significanceLabels[i]
     )
 
-for bar, meanValue in zip(leftBars, leftMeans):
+for bar, meanValue, n in zip(leftBars, leftMeans, leftNs):
     ax.text(
         bar.get_x() + bar.get_width() / 2,
-        bar.get_height() + 1.2,
-        f"{meanValue:.1f}%",
+        bar.get_height() + 0.8,
+        f"{meanValue:.1f}%\n(n={n})",
         ha="center",
         va="bottom",
-        fontsize=9
+        fontsize=10
     )
 
-for bar, meanValue in zip(rightBars, rightMeans):
+for bar, meanValue, n in zip(rightBars, rightMeans, rightNs):
     ax.text(
         bar.get_x() + bar.get_width() / 2,
-        bar.get_height() + 1.2,
-        f"{meanValue:.1f}%",
+        bar.get_height() + 0.8,
+        f"{meanValue:.1f}%\n(n={n})",
         ha="center",
         va="bottom",
-        fontsize=9
+        fontsize=10
     )
 
-ax.set_ylabel("Classification accuracy (%)")
+ax.set_ylabel("Recognition accuracy (%)", fontsize=10)
 ax.set_xticks(x)
-ax.set_xticklabels(groupNames)
-ax.set_ylim(40, 110)
-ax.set_title("Recognition accuracy by participant background")
+ax.set_xticklabels(groupNames, fontsize=10)
 
-legendLabels = [
-    f"{leftBarLabels[0]} / {rightBarLabels[0]}",
-    f"{leftBarLabels[1]} / {rightBarLabels[1]}",
-    f"{leftBarLabels[2]} / {rightBarLabels[2]}",
-]
+maxBarHeight = max(
+    [m + s for m, s in zip(leftMeans, leftSds)] +
+    [m + s for m, s in zip(rightMeans, rightSds)]
+)
 
-ax.text(x[0] - barWidth / 2, 42.5, leftBarLabels[0], ha="center", va="top", fontsize=8)
-ax.text(x[0] + barWidth / 2, 42.5, rightBarLabels[0], ha="center", va="top", fontsize=8)
+yMax = maxBarHeight + 6
+ax.set_ylim(50, yMax)
+ax.set_yticks(np.arange(50, 101, 10))
+ax.tick_params(axis="y", labelsize=9)
 
-ax.text(x[1] - barWidth / 2, 42.5, leftBarLabels[1], ha="center", va="top", fontsize=8)
-ax.text(x[1] + barWidth / 2, 42.5, rightBarLabels[1], ha="center", va="top", fontsize=8)
+ax.set_title("Recognition accuracy by participant background", fontsize=12, pad=6)
 
-ax.text(x[2] - barWidth / 2, 42.5, leftBarLabels[2], ha="center", va="top", fontsize=8)
-ax.text(x[2] + barWidth / 2, 42.5, rightBarLabels[2], ha="center", va="top", fontsize=8)
+labelY = 60
+
+ax.text(x[0] - barWidth / 2, labelY, leftBarLabels[0], ha="center", va="top", fontsize=7.5)
+ax.text(x[0] + barWidth / 2, labelY, rightBarLabels[0], ha="center", va="top", fontsize=7.5)
+
+ax.text(x[1] - barWidth / 2, labelY, leftBarLabels[1], ha="center", va="top", fontsize=7.5)
+ax.text(x[1] + barWidth / 2, labelY, rightBarLabels[1], ha="center", va="top", fontsize=7.5)
+
+ax.text(x[2] - barWidth / 2, labelY, leftBarLabels[2], ha="center", va="top", fontsize=7.2)
+ax.text(x[2] + barWidth / 2, labelY, rightBarLabels[2], ha="center", va="top", fontsize=7.2)
 
 ax.spines["top"].set_visible(False)
 ax.spines["right"].set_visible(False)
 ax.tick_params(direction="in")
 
-plt.tight_layout()
+plt.subplots_adjust(
+    left=0.09,
+    right=0.985,
+    top=0.90,
+    bottom=0.16
+)
+
 plt.show()
 
 print("Music comparison:")
+print("  nMusic =", len(musicGroup))
+print("  nNoMusic =", len(noMusicGroup))
 print("  pValue =", musicTest.pvalue)
 print("  significance =", significanceLabels[0])
 print()
 
 print("Astronomy comparison:")
+print("  nHighAstronomy =", len(highAstronomyGroup))
+print("  nLowAstronomy =", len(lowAstronomyGroup))
 print("  pValue =", astronomyTest.pvalue)
 print("  significance =", significanceLabels[1])
 print()
 
 print("Combined comparison:")
+print("  nHighAstronomyWithMusic =", len(highAstronomyWithMusicGroup))
+print("  nLowAstronomyNoMusic =", len(lowAstronomyNoMusicGroup))
 print("  pValue =", combinedGroupTest.pvalue)
 print("  significance =", significanceLabels[2])
