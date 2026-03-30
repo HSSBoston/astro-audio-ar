@@ -60,6 +60,8 @@ highAstronomyGroup = data[
 musicTest = stats.ttest_ind(musicGroup, noMusicGroup, equal_var=False)
 astronomyTest = stats.ttest_ind(lowAstronomyGroup, highAstronomyGroup, equal_var=False)
 
+# the classical Cohen’s d (pooled SD version)
+# 
 def computeCohensD(group1, group2):
     n1 = len(group1)
     n2 = len(group2)
@@ -77,7 +79,7 @@ def computeCohensD(group1, group2):
     return cohensD
 
 musicCohensD = computeCohensD(musicGroup, noMusicGroup)
-astronomyCohensD = computeCohensD(highAstronomyGroup, lowAstronomyGroup)
+astronomyCohensD = computeCohensD(lowAstronomyGroup, highAstronomyGroup)
 
 # Print results
 print("Music vs No Music")
