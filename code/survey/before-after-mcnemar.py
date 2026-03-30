@@ -29,7 +29,7 @@ def toBinaryAfter(x):
 df = pd.read_csv(csvPath)
 
 df["beforeBin"] = df[beforeCol].apply(toBinaryBefore)
-df["afterBin"] = df[afterCol].apply(toBinaryAfter)
+df["afterBin"]  = df[afterCol].apply(toBinaryAfter)
 
 paired = df.dropna(subset=["beforeBin", "afterBin"]).copy()
 paired["beforeBin"] = paired["beforeBin"].astype(int)
