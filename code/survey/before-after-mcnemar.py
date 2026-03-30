@@ -8,7 +8,7 @@ beforeCol = "Before this survey, had you ever felt or perceived any connection b
 afterCol = "Based on your experience listening to several musical pieces translated from constellations, do you feel or perceive a connection between constellations and musical expression? "
 
 beforePositive = {"Yes", "Somewhat yes"}
-afterPositive = {"Strongly agree", "Agree"}
+afterPositive  = {"Strongly agree", "Agree"}
 
 def toBinaryBefore(x):
     if pd.isna(x):
