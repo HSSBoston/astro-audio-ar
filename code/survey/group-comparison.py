@@ -2,10 +2,8 @@ import math
 import pandas as pd
 from scipy import stats
 
-# Load CSV
 data = pd.read_csv("data/responses.csv")
 
-# Question columns (Q1-Q10)
 questionCols = [
     data.columns[9],
     data.columns[10],
@@ -19,7 +17,6 @@ questionCols = [
     data.columns[18],
 ]
 
-# Correct answers
 correctAnswers = [
     "Constellation 1",
     "Constellation 2",
