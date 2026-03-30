@@ -56,10 +56,27 @@ highAstronomyGroup = data[
     data[astronomyCol].isin(["Moderately knowledgeable", "Very knowledgeable"])
 ]["accuracy"]
 
+# Combined groups
+highAstronomyWithMusicGroup = data[
+    (data[musicCol] == "Yes")
+    & (data[astronomyCol].isin(["Moderately knowledgeable", "Very knowledgeable"]))
+]["accuracy"]
+
+lowAstronomyNoMusicGroup = data[
+    (data[musicCol] == "No")
+    & (data[astronomyCol].isin(["Not knowledgeable", "Slightly knowledgeable"]))
+]["accuracy"]
+
 # Welch's two-sample t-tests (equal_var=False)
 # This does not assume equal variance.
-musicTest = stats.ttest_ind(musicGroup, noMusicGroup, equal_var=False)
-astronomyTest = stats.ttest_ind(lowAstronomyGroup, highAstronomyGroup, equal_var=False)
+musicTest = stats.ttest_ind(
+    musicGroup, noMusicGroup, equal_var=False)
+
+astronomyTest = stats.ttest_ind(
+    lowAstronomyGroup, highAstronomyGroup, equal_var=False)
+
+combinedGroupTest = stats.ttest_ind(
+    highAstronomyWithMusicGroup, lowAstronomyNoMusicGroup, equal_var=False)
 
 # Classical Cohen’s d (pooled SD version)
 # This is what most textbooks define as Cohen’s d. 
@@ -81,8 +98,17 @@ def computeCohensD(group1, group2):
     cohensD = (mean1 - mean2) / pooledSd
     return cohensD
 
-musicCohensD = computeCohensD(musicGroup, noMusicGroup)
-astronomyCohensD = computeCohensD(lowAstronomyGroup, highAstronomyGroup)
+musicCohensD = computeCohensD(
+    musicGroup,
+    noMusicGroup)
+
+astronomyCohensD = computeCohensD(
+    lowAstronomyGroup,
+    highAstronomyGroup)
+
+combinedGroupCohensD = computeCohensD(
+    highAstronomyWithMusicGroup,
+    lowAstronomyNoMusicGroup)
 
 # Print results
 print("Music vs No Music")
