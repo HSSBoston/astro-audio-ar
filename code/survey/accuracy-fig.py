@@ -7,7 +7,7 @@ audio_to_image = np.array([94.8, 95.7, 92.2, 92.2, 92.2, 90.5, 90.5])
 image_to_audio = np.array([93.0, 91.4, 90.5])
 
 groups = [all_tasks, audio_to_image, image_to_audio]
-labels = ["All Tasks", "Audio → Image", "Image → Audio"]
+labels = ["All\n10 Tasks", "Audio → Image\n7 Tasks", "Image → Audio\n3 Tasks"]
 
 # Compute stats
 means = [g.mean() for g in groups]
