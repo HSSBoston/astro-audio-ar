@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Data
 all_tasks = np.array([94.8, 95.7, 92.2, 92.2, 92.2, 90.5, 90.5, 93.0, 91.4, 90.5])
 audio_to_image = np.array([94.8, 95.7, 92.2, 92.2, 92.2, 90.5, 90.5])
 image_to_audio = np.array([93.0, 91.4, 90.5])
