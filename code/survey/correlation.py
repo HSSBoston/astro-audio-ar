@@ -31,10 +31,14 @@ def before_map(x):
     if pd.isna(x):
         return None
     x = str(x).lower()
-    if "yes" in x:
+    if x in ["strongly agree", "agree"]:
         return 1
     else:
         return 0
+#     if "yes" in x:
+#         return 1
+#     else:
+#         return 0
 
 def after_map(x):
     if pd.isna(x):
