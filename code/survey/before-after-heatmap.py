@@ -21,16 +21,26 @@ im = ax.imshow(pctMatrix, cmap="Blues", vmin=0, vmax=100)
 ax.set_xticks([0, 1])
 ax.set_yticks([0, 1])
 ax.set_xticklabels(["After positive", "After not positive"])
-ax.set_yticklabels(["Before positive", "Before not positive"])
+ax.set_yticklabels(["Before\npositive", "Before\nnot positive"])
 
 for i in range(2):
     for j in range(2):
         ax.text(j, i,
                 f"{int(matrix[i, j])}\n({pctMatrix[i, j]:.1f}%)",
                 ha="center", va="center",
-                fontweight="bold", fontsize=11)
+                fontweight="bold", fontsize=14)
 
-# ax.set_title("Before–After Perception Transitions")
-ax.set_title("Before–After Perception Transitions (n=114)\nMcNemar test: p < 0.001")
+# ax.set_title("Before–After Perception Transitions",
+#              fontsize=15)
+
+ax.set_title("Before–After Perception Transitions\nMcNemar test: p < 0.001",
+             fontsize=15)
+
+ax.tick_params(axis='both', labelsize=15)
+plt.tick_params(axis='both', direction='in')
+
 plt.tight_layout()
+plt.tight_layout(pad=0)
+plt.subplots_adjust(left=0.25, right=0.98, top=0.89, bottom=0.05)
+
 plt.show()

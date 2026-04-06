@@ -27,7 +27,7 @@ bars = ax.bar(
 ax.set_ylim(50, 100)
 
 # Axes labels / title
-ax.set_ylabel("Positive response rate (%)", fontsize=11)
+ax.set_ylabel("Positive response rate (%)", fontsize=11, labelpad=0)
 
 # X ticks
 ax.set_xticks(x)
@@ -46,8 +46,8 @@ ax.grid(axis='y', which='major', linestyle='--', linewidth=0.6, alpha=0.5)
 ax.set_axisbelow(True)
 
 # Group labels (optional but useful)
-ax.text(0.5, 99.2, "Engagement", ha='center', va='top', fontsize=10, fontweight='bold')
-ax.text(2.5, 99.2, "Educational value", ha='center', va='top', fontsize=10, fontweight='bold')
+ax.text(0.5, 99.2, "Engagement", ha='center', va='top', fontsize=12)
+ax.text(2.5, 99.2, "Educational value", ha='center', va='top', fontsize=12)
 
 # Small divider between the two conceptual groups
 ax.axvline(1.5, color='black', linewidth=0.8)
@@ -60,13 +60,15 @@ for xi, yi in zip(x, values):
         fontsize=10, fontweight='bold'
     )
 
-ax.set_title("User Impact", fontsize=11)
+ax.set_title("User Impact", fontsize=12)
 
 # Spine widths
 for spine in ax.spines.values():
     spine.set_linewidth(1.0)
 
 
-# Reduce whitespace as much as possible
-plt.tight_layout(pad=0.4)
+plt.tight_layout()
+plt.tight_layout(pad=0)
+plt.subplots_adjust(left=0.08, right=0.99, top=0.92, bottom=0.12)
+
 plt.show()

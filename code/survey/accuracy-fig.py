@@ -27,17 +27,17 @@ for i, bar in enumerate(bars):
     height = bar.get_height()
     # Bold stars
     plt.text(bar.get_x() + bar.get_width()/2, height + 5,
-             "***",
-             ha='center', fontsize=10, fontweight='bold')
+             f"{means[i]:.1f}%",
+             ha='center', fontsize=10, fontweight="bold")
 
     # Normal percentage (slightly below)
     plt.text(bar.get_x() + bar.get_width()/2, height + 2.5,
-             f"{means[i]:.1f}%",
+             "p<0.01",
              ha='center', fontsize=10)
 
 # Axis settings
 plt.xticks(x, labels)
-plt.ylabel("Recognition accuracy (%)")
+plt.ylabel("Recognition accuracy (%)", labelpad=0)
 plt.title("Recognition accuracy by task type (n=116)", fontsize=12, pad=6)
 
 # Y-axis from 50 to 100
@@ -51,7 +51,8 @@ plt.tick_params(axis='both', direction='in')
 ax = plt.gca()
 ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
-plt.tight_layout()
+plt.tight_layout(pad=0)
+plt.subplots_adjust(left=0.10, right=0.99, top=0.93, bottom=0.10)
 
 # Show
 plt.show()

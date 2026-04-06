@@ -86,7 +86,7 @@ def getSignificanceLabel(pValue):
     if pValue < 0.001:
         return "***"
     if pValue < 0.01:
-        return "**"
+        return "p<0.05"
     if pValue < 0.05:
         return "*"
     return "ns"
@@ -150,10 +150,14 @@ pValues = [
 
 significanceLabels = [getSignificanceLabel(pValue) for pValue in pValues]
 
-x = np.arange(len(groupNames))
+# x = np.arange(len(groupNames))
+groupSpacing = 0.65  # smaller = tighter groups
+x = np.arange(len(groupNames)) * groupSpacing
+
 barWidth = 0.28
 
-fig, ax = plt.subplots(figsize=(7.5, 4.2))
+# fig, ax = plt.subplots(figsize=(7.5, 4.2))
+fig, ax = plt.subplots(figsize=(6.25, 3.5))
 
 leftBars = ax.bar(
     x - barWidth / 2,
@@ -161,6 +165,7 @@ leftBars = ax.bar(
     barWidth,
     yerr=leftSds,
     capsize=3,
+    color="#5DA5DA", # lighter blue
     label="Group 1"
 )
 
@@ -170,6 +175,7 @@ rightBars = ax.bar(
     barWidth,
     yerr=rightSds,
     capsize=3,
+    color="#F28E2B", # lighter orange
     label="Group 2"
 )
 
@@ -197,6 +203,7 @@ for bar, meanValue, n in zip(leftBars, leftMeans, leftNs):
         ha="center",
         va="bottom",
         fontsize=10
+#         fontweight="bold"
     )
 
 for bar, meanValue, n in zip(rightBars, rightMeans, rightNs):
@@ -209,7 +216,7 @@ for bar, meanValue, n in zip(rightBars, rightMeans, rightNs):
         fontsize=10
     )
 
-ax.set_ylabel("Recognition accuracy (%)", fontsize=10)
+ax.set_ylabel("Recognition accuracy (%)", fontsize=10, labelpad=0)
 ax.set_xticks(x)
 ax.set_xticklabels(groupNames, fontsize=10)
 
@@ -227,14 +234,20 @@ ax.set_title("Recognition accuracy by participant background", fontsize=12, pad=
 
 labelY = 60
 
-ax.text(x[0] - barWidth / 2, labelY, leftBarLabels[0], ha="center", va="top", fontsize=7.5)
-ax.text(x[0] + barWidth / 2, labelY, rightBarLabels[0], ha="center", va="top", fontsize=7.5)
+ax.text(x[0] - barWidth / 2, labelY, leftBarLabels[0],
+        ha="center", va="top", fontsize=7.5, fontweight="bold")
+ax.text(x[0] + barWidth / 2, labelY, rightBarLabels[0],
+        ha="center", va="top", fontsize=7.5, fontweight="bold")
 
-ax.text(x[1] - barWidth / 2, labelY, leftBarLabels[1], ha="center", va="top", fontsize=7.5)
-ax.text(x[1] + barWidth / 2, labelY, rightBarLabels[1], ha="center", va="top", fontsize=7.5)
+ax.text(x[1] - barWidth / 2, labelY, leftBarLabels[1],
+        ha="center", va="top", fontsize=7.5, fontweight="bold")
+ax.text(x[1] + barWidth / 2, labelY, rightBarLabels[1],
+        ha="center", va="top", fontsize=7.5, fontweight="bold")
 
-ax.text(x[2] - barWidth / 2, labelY, leftBarLabels[2], ha="center", va="top", fontsize=7.2)
-ax.text(x[2] + barWidth / 2, labelY, rightBarLabels[2], ha="center", va="top", fontsize=7.2)
+ax.text(x[2] - barWidth / 2, labelY, leftBarLabels[2],
+        ha="center", va="top", fontsize=7.2, fontweight="bold")
+ax.text(x[2] + barWidth / 2, labelY, rightBarLabels[2],
+        ha="center", va="top", fontsize=7.2, fontweight="bold")
 
 ax.spines["top"].set_visible(False)
 ax.spines["right"].set_visible(False)
@@ -246,6 +259,9 @@ plt.subplots_adjust(
     top=0.90,
     bottom=0.16
 )
+
+plt.tight_layout(pad=0)
+plt.subplots_adjust(left=0.07, right=0.99, top=0.93, bottom=0.05)
 
 plt.show()
 
