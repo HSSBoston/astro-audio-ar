@@ -49,7 +49,7 @@ df["after_num"] = df[AFTER_COL].apply(after_map)
 
 df["shift"] = df["after_num"] - df["before_num"]
 
-# === 5. Accuracy ===
+# Accuracy
 df["accuracy"] = df["Score"]
 
 # === 6. Drop missing values ===
