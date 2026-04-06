@@ -10,13 +10,9 @@ labels = [
 ]
 values = [91.3, 76.5, 84.9, 82.3]
 
-# X positions
 x = np.arange(len(labels))
-
-# Create compact figure
 fig, ax = plt.subplots(figsize=(6.4, 3.2))
 
-# Bars
 bars = ax.bar(
     x, values, width=0.62,
     edgecolor='black', linewidth=1.0
