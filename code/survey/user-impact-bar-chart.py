@@ -18,7 +18,6 @@ bars = ax.bar(
     edgecolor='black', linewidth=1.0
 )
 
-# Tight y-range to emphasize differences while keeping honesty
 ax.set_ylim(50, 100)
 
 # Axes labels / title
