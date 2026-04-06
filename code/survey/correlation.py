@@ -52,15 +52,12 @@ df["shift"] = df["after_num"] - df["before_num"]
 # Accuracy
 df["accuracy"] = df["Score"]
 
-# === 6. Drop missing values ===
-
+# Drop missing values
 df_corr1 = df.dropna(subset=["enjoyment_num", "motivation_num"])
 df_corr2 = df.dropna(subset=["accuracy", "shift"])
 
 # NEW: accuracy ↔ motivation
 df_corr3 = df.dropna(subset=["accuracy", "motivation_num"])
-
-# === 7. Compute correlations ===
 
 # (1) Enjoyment ↔ Motivation
 corr1, p1 = spearmanr(df_corr1["enjoyment_num"], df_corr1["motivation_num"])
