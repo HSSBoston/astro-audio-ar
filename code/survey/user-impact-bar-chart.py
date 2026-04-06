@@ -20,33 +20,25 @@ bars = ax.bar(
 
 ax.set_ylim(50, 100)
 
-# Axes labels / title
 ax.set_ylabel("Positive response rate (%)", fontsize=11, labelpad=0)
 
-# X ticks
 ax.set_xticks(x)
 ax.set_xticklabels(labels, fontsize=10)
 
-# Y ticks
 ax.set_yticks(np.arange(50, 101, 10))
 ax.yaxis.set_minor_locator(MultipleLocator(1))
 
-# Tick style to match your existing figures
 ax.tick_params(axis='both', which='major', direction='in', length=5, width=1.0)
 ax.tick_params(axis='both', which='minor', direction='in', length=3, width=0.8)
 
-# Light horizontal grid
 ax.grid(axis='y', which='major', linestyle='--', linewidth=0.6, alpha=0.5)
 ax.set_axisbelow(True)
 
-# Group labels (optional but useful)
 ax.text(0.5, 99.2, "Engagement", ha='center', va='top', fontsize=12)
 ax.text(2.5, 99.2, "Educational value", ha='center', va='top', fontsize=12)
 
-# Small divider between the two conceptual groups
 ax.axvline(1.5, color='black', linewidth=0.8)
 
-# Bold value labels above bars
 for xi, yi in zip(x, values):
     ax.text(
         xi, yi + 0.8, f"{yi:.1f}%",
