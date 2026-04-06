@@ -56,13 +56,13 @@ df["accuracy"] = df["Score"]
 df_corr1 = df.dropna(subset=["enjoyment_num", "motivation_num"])
 df_corr2 = df.dropna(subset=["accuracy", "shift"])
 
-# NEW: accuracy ↔ motivation
+# Accuracy ↔ motivation
 df_corr3 = df.dropna(subset=["accuracy", "motivation_num"])
 
-# (1) Enjoyment ↔ Motivation
+# Enjoyment ↔ Motivation
 corr1, p1 = spearmanr(df_corr1["enjoyment_num"], df_corr1["motivation_num"])
 
-# (2) Accuracy ↔ Perception shift
+# Accuracy ↔ Perception shift
 corr2, p2 = spearmanr(df_corr2["accuracy"], df_corr2["shift"])
 
 # (3) Accuracy ↔ Motivation  ⭐ NEW
