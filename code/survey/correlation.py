@@ -55,20 +55,14 @@ df["accuracy"] = df["Score"]
 # Drop missing values
 df_corr1 = df.dropna(subset=["enjoyment_num", "motivation_num"])
 df_corr2 = df.dropna(subset=["accuracy", "shift"])
-
-# Accuracy ↔ motivation
 df_corr3 = df.dropna(subset=["accuracy", "motivation_num"])
 
 # Enjoyment ↔ Motivation
 corr1, p1 = spearmanr(df_corr1["enjoyment_num"], df_corr1["motivation_num"])
-
 # Accuracy ↔ Perception shift
 corr2, p2 = spearmanr(df_corr2["accuracy"], df_corr2["shift"])
-
-# (3) Accuracy ↔ Motivation  ⭐ NEW
+# Accuracy ↔ Motivation
 corr3, p3 = spearmanr(df_corr3["accuracy"], df_corr3["motivation_num"])
-
-# === 8. Output ===
 
 print("=== Correlation Results ===")
 print(f"Enjoyment ↔ Motivation: rho = {corr1:.3f}, p = {p1:.5f}")
