@@ -3,15 +3,11 @@ from scipy.stats import spearmanr
 
 df = pd.read_csv("data/responses.csv")
 
-# === 2. Define column names ===
-
 ENJOYMENT_COL = "Did you enjoy exploring celestial objects based on their musical representations?"
 MOTIVATION_COL = "After listening to the music of celestial objects, do you feel as if you want to explore and discover more about them?"
 
 BEFORE_COL = "Before this survey, had you ever felt or perceived any connection between celestial objects and musical expression?"
 AFTER_COL = "Based on your experience listening to several musical pieces translated from constellations, do you feel or perceive a connection between constellations and musical expression? "
-
-# === 3. Mapping ===
 
 likert_map = {
     "Strongly disagree": 1,
@@ -24,8 +20,8 @@ likert_map = {
 df["enjoyment_num"] = df[ENJOYMENT_COL].map(likert_map)
 df["motivation_num"] = df[MOTIVATION_COL].map(likert_map)
 
-# === 4. Convert perception ===
-
+# Convert perception
+#
 def before_map(x):
     if pd.isna(x):
         return None
