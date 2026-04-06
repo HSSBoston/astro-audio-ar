@@ -14,7 +14,6 @@ ns = [len(g) for g in groups]
 
 x = np.arange(len(groups))
 
-# Figure
 plt.figure(figsize=(4.5, 3.5))
 
 # Bars with error bars
