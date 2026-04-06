@@ -1,7 +1,6 @@
 import pandas as pd
 from scipy.stats import spearmanr
 
-# === 1. Load data ===
 df = pd.read_csv("data/responses.csv")
 
 # === 2. Define column names ===
