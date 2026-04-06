@@ -48,7 +48,6 @@ for xi, yi in zip(x, values):
 
 ax.set_title("User Impact", fontsize=12)
 
-# Spine widths
 for spine in ax.spines.values():
     spine.set_linewidth(1.0)
 
