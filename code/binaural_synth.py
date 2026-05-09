@@ -1,4 +1,5 @@
 import time, numpy as np
+import threading
 import sounddevice as sd               # for realtime audio output
 import soundfile as sf                 # for reading WAV files
 from scipy.signal import fftconvolve   # for HRIR convolution 
@@ -13,17 +14,17 @@ switchIntervalSec = 0.5
 # left-right HRIR pairs
 hrirPaths = [
     ("hrtf/mit-kemar/elev0/L0e090a.wav",  "hrtf/mit-kemar/elev0/R0e090a.wav"),
-#    ("hrtf/mit-kemar/elev0/L0e080a.wav",  "hrtf/mit-kemar/elev0/R0e080a.wav"),
-#    ("hrtf/mit-kemar/elev0/L0e070a.wav",  "hrtf/mit-kemar/elev0/R0e070a.wav"),
+    ("hrtf/mit-kemar/elev0/L0e075a.wav",  "hrtf/mit-kemar/elev0/R0e075a.wav"),
     ("hrtf/mit-kemar/elev0/L0e060a.wav",  "hrtf/mit-kemar/elev0/R0e060a.wav"),
-#    ("hrtf/mit-kemar/elev0/L0e050a.wav",  "hrtf/mit-kemar/elev0/R0e050a.wav"),
-#    ("hrtf/mit-kemar/elev0/L0e040a.wav",  "hrtf/mit-kemar/elev0/R0e040a.wav"),
+    ("hrtf/mit-kemar/elev0/L0e045a.wav",  "hrtf/mit-kemar/elev0/R0e045a.wav"),
     ("hrtf/mit-kemar/elev0/L0e030a.wav",  "hrtf/mit-kemar/elev0/R0e030a.wav"),
-#    ("hrtf/mit-kemar/elev0/L0e020a.wav",  "hrtf/mit-kemar/elev0/R0e020a.wav"),
-#    ("hrtf/mit-kemar/elev0/L0e010a.wav",  "hrtf/mit-kemar/elev0/R0e010a.wav"),
+    ("hrtf/mit-kemar/elev0/L0e015a.wav",  "hrtf/mit-kemar/elev0/R0e015a.wav"),
     ("hrtf/mit-kemar/elev0/L0e000a.wav",  "hrtf/mit-kemar/elev0/R0e000a.wav"),
+    ("hrtf/mit-kemar/elev0/L0e345a.wav",  "hrtf/mit-kemar/elev0/R0e345a.wav"),
     ("hrtf/mit-kemar/elev0/L0e330a.wav",  "hrtf/mit-kemar/elev0/R0e330a.wav"),
+    ("hrtf/mit-kemar/elev0/L0e315a.wav",  "hrtf/mit-kemar/elev0/R0e315a.wav"),
     ("hrtf/mit-kemar/elev0/L0e300a.wav",  "hrtf/mit-kemar/elev0/R0e300a.wav"),
+    ("hrtf/mit-kemar/elev0/L0e315a.wav",  "hrtf/mit-kemar/elev0/R0e315a.wav"),
     ("hrtf/mit-kemar/elev0/L0e270a.wav",  "hrtf/mit-kemar/elev0/R0e270a.wav"),
 ]
 
