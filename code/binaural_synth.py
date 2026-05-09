@@ -8,7 +8,7 @@ monoWavPath = "io/bootes.wav"
 
 streamSr = 48000  # sampling rate
 blockSize = 1024
-switchIntervalSec = 1.0
+switchIntervalSec = 0.5
 
 # left-right HRIR pairs
 hrirPaths = [
@@ -82,23 +82,21 @@ if len(hrirPairs) == 0:
 # --------------------------------------------------
 # 3. Initialize playback state
 # --------------------------------------------------
-playhead = 0
-
-activePairIndex = 0
+playhead = 0         # indicates where the code currently is in the mono WAV
+activePairIndex = 0  # indicates which HRIR pair is currently being used
 samplesUntilSwitch = int(streamSr * switchIntervalSec)
 
 hrirLeft, hrirRight = hrirPairs[activePairIndex]
 
 # Start with zero tails
-tailLeft = np.zeros(len(hrirLeft) - 1, dtype=np.float32)
+tailLeft  = np.zeros(len(hrirLeft)  - 1, dtype=np.float32)
 tailRight = np.zeros(len(hrirRight) - 1, dtype=np.float32)
 
 overrunCount = 0
 nearLimitCount = 0
 
-
 # --------------------------------------------------
-# 6. Looping WAV block reader
+# 4. Read the next mono block
 # --------------------------------------------------
 def getNextMonoBlock(numFrames):
     global playhead
@@ -121,38 +119,37 @@ def getNextMonoBlock(numFrames):
 
     return output
 
-
 # --------------------------------------------------
-# 7. Convolution for one block using one HRIR pair
+# 5. Convolve one mono block with one HRIR pair
 # --------------------------------------------------
 def processBlock(monoBlock, hrirLeft, hrirRight, tailLeft, tailRight):
-    convLeft = fftconvolve(monoBlock, hrirLeft, mode="full").astype(np.float32)
+    convLeft  = fftconvolve(monoBlock, hrirLeft,  mode="full").astype(np.float32)
     convRight = fftconvolve(monoBlock, hrirRight, mode="full").astype(np.float32)
 
-    # Add previous spillover
-    convLeft[:len(tailLeft)] += tailLeft
+    # Add the previous block’s leftover tail
+    convLeft[ :len(tailLeft)]  += tailLeft
     convRight[:len(tailRight)] += tailRight
 
-    outLeft = convLeft[:len(monoBlock)]
+    # Takes only the current block length for immediate playback
+    outLeft  = convLeft[ :len(monoBlock)]
     outRight = convRight[:len(monoBlock)]
 
-    newTailLeft = convLeft[len(monoBlock):]
+    # The leftover part becomes the new tail
+    newTailLeft  = convLeft[ len(monoBlock):]
     newTailRight = convRight[len(monoBlock):]
 
+    # Combines left and right into stereo
     stereoBlock = np.column_stack((outLeft, outRight))
     return stereoBlock, newTailLeft, newTailRight
 
-
 # --------------------------------------------------
 # 8. Resize tails if HRIR length changes
+#      If the next HRIR has a different length, the saved tail may be too short
+#      or too long. Adjust an old tail to a new required length.
+#          If the new HRIR is longer, pad with zeros.
+#          If the new HRIR is shorter, keep only the beginning part.
 # --------------------------------------------------
 def resizeTail(oldTail, newLength):
-    """
-    Adjust an old tail buffer to a new required length.
-
-    If the new HRIR is longer, pad with zeros.
-    If the new HRIR is shorter, keep only the beginning part.
-    """
     currentLength = len(oldTail)
 
     if currentLength == newLength:
