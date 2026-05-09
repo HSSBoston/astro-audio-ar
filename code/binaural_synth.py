@@ -1,6 +1,8 @@
 import time, numpy as np
-import sounddevice as sd, soundfile as sf
-from scipy.signal import fftconvolve, resample_poly
+import sounddevice as sd               # for realtime audio output
+import soundfile as sf                 # for reading WAV files
+from scipy.signal import fftconvolve   # for HRIR convolution 
+from scipy.signal import resample_poly
 
 monoWavPath = "io/bootes.wav"
 
@@ -25,13 +27,16 @@ hrirPaths = [
     ("hrtf/mit-kemar/elev0/L0e270a.wav",  "hrtf/mit-kemar/elev0/R0e270a.wav"),
 ]
 
-
+# Convert the input WAV to mono, if necessary
+# 
 def toMono(audioData):
+    # Make sure it is mono
     if audioData.ndim > 1:
-        return audioData[:, 0]
+        return audioData[:, 0] # take the first (left-ear) channel if needed
     return audioData
 
-
+# Change a given WAV's sample rate to the expected rate
+# 
 def loadAndResampleWav(path, targetSr):
     audioData, sampleRate = sf.read(path)
     audioData = toMono(audioData)
@@ -41,30 +46,29 @@ def loadAndResampleWav(path, targetSr):
 
     return audioData.astype(np.float32)
 
-
+# Prevents clipping. If the audio volume becomes higher than 1.0, the block is
+# scaled down so its peak becomes 0.95.
+#
 def normalizeBlock(stereoBlock):
     maxVal = np.max(np.abs(stereoBlock))
     if maxVal > 1.0:
         stereoBlock = stereoBlock / maxVal * 0.95
     return stereoBlock
 
-
 # --------------------------------------------------
-# 3. Load mono WAV
+# 1. Load and resample the input mono WAV
 # --------------------------------------------------
 monoAudio = loadAndResampleWav(monoWavPath, streamSr)
-
 if len(monoAudio) == 0:
     raise ValueError("Mono WAV file is empty.")
 
-
 # --------------------------------------------------
-# 4. Load all HRIR pairs into memory
+# 2. Load all HRIR pairs into memory
 # --------------------------------------------------
 hrirPairs = []
 
 for leftPath, rightPath in hrirPaths:
-    hrirLeft = loadAndResampleWav(leftPath, streamSr)
+    hrirLeft  = loadAndResampleWav(leftPath, streamSr)
     hrirRight = loadAndResampleWav(rightPath, streamSr)
 
     if len(hrirLeft) == 0 or len(hrirRight) == 0:
@@ -75,9 +79,8 @@ for leftPath, rightPath in hrirPaths:
 if len(hrirPairs) == 0:
     raise ValueError("No HRIR pairs loaded.")
 
-
 # --------------------------------------------------
-# 5. Playback state
+# 3. Initialize playback state
 # --------------------------------------------------
 playhead = 0
 
