@@ -143,7 +143,7 @@ def processBlock(monoBlock, hrirLeft, hrirRight, tailLeft, tailRight):
     return stereoBlock, newTailLeft, newTailRight
 
 # --------------------------------------------------
-# 8. Resize tails if HRIR length changes
+# 6. Resize tails if HRIR length changes
 #      If the next HRIR has a different length, the saved tail may be too short
 #      or too long. Adjust an old tail to a new required length.
 #          If the new HRIR is longer, pad with zeros.
@@ -160,9 +160,15 @@ def resizeTail(oldTail, newLength):
 
     return oldTail[:newLength]
 
-
 # --------------------------------------------------
-# 9. Output callback
+# 7. Real-time callback function
+#      sounddevice repeatedly calls this function when it needs the next
+#      stereo output block. This function gets the next mono block, convolves
+#      it with HRIRs, and put the stereo output block to "outData".
+#
+#      Usually, this function processes the whole block at once. But if an
+#      HRIR switch happens in the middle of callback processing, this function
+#      splits the block into smaller chunks.
 # --------------------------------------------------
 def callback(outData, frames, callbackTime, status):
     global samplesUntilSwitch
@@ -176,14 +182,16 @@ def callback(outData, frames, callbackTime, status):
     if status:
         print(status)
 
+    # Create an empty stereo output block
     outputStereo = np.zeros((frames, 2), dtype=np.float32)
     written = 0
 
+    # Fill the output block with stereo samples
     while written < frames:
         chunkSize = min(frames - written, samplesUntilSwitch)
-
         monoBlock = getNextMonoBlock(chunkSize)
 
+        # Convolution
         stereoBlock, tailLeft, tailRight = processBlock(
             monoBlock, hrirLeft, hrirRight, tailLeft, tailRight
         )
@@ -209,9 +217,7 @@ def callback(outData, frames, callbackTime, status):
     outData[:, 0] = outputStereo[:, 0]
     outData[:, 1] = outputStereo[:, 1]
 
-    # --------------------------------------------------
-    # 10. Callback timing / overrun detection
-    # --------------------------------------------------
+    # Callback timing: overrun detection
     elapsed = time.perf_counter() - callbackStart
     blockTime = frames / streamSr
 
@@ -234,7 +240,7 @@ def callback(outData, frames, callbackTime, status):
 
 
 # --------------------------------------------------
-# 11. Start stream
+# 8. Start stream
 # --------------------------------------------------
 with sd.OutputStream(
     samplerate=streamSr,
