@@ -221,7 +221,7 @@ def callback(outData, frames, callbackTime, status):
     elapsed = time.perf_counter() - callbackStart
     blockTime = frames / streamSr
     
-    print(elapsed, blockTime)
+#     print(elapsed, blockTime)
 
     if elapsed > blockTime:
         overrunCount += 1
