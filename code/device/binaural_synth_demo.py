@@ -1,5 +1,4 @@
 import time, numpy as np
-import threading
 import sounddevice as sd               # for realtime audio output
 import soundfile as sf                 # for reading WAV files
 from scipy.signal import fftconvolve   # for HRIR convolution 
@@ -221,6 +220,8 @@ def callback(outData, frames, callbackTime, status):
     # Callback timing: overrun detection
     elapsed = time.perf_counter() - callbackStart
     blockTime = frames / streamSr
+    
+    print(elapsed, blockTime)
 
     if elapsed > blockTime:
         overrunCount += 1
@@ -239,17 +240,14 @@ def callback(outData, frames, callbackTime, status):
             f"usage={100*elapsed/blockTime:.1f}%"
         )
 
-
-# --------------------------------------------------
-# 8. Start stream
-# --------------------------------------------------
-with sd.OutputStream(
-    samplerate=streamSr,
-    blocksize=blockSize,
-    channels=2,
-    dtype="float32",
-    callback=callback
-):
-    print("Real-time switching HRIR playback is running. Press Ctrl+C to stop.")
-    while True:
-        sd.sleep(1000)
+if __name__ == "__main__":
+    with sd.OutputStream(
+        samplerate=streamSr,
+        blocksize=blockSize,
+        channels=2,
+        dtype="float32",
+        callback=callback
+    ):
+        print("Real-time switching HRIR playback is running. Press Ctrl+C to stop.")
+        while True:
+            sd.sleep(1000)
