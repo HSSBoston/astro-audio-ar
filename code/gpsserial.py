@@ -1,6 +1,5 @@
 # Library to read GPS data (NMEA sentences)
 # April 24, 2024 v0.03
-# IoT for Kids: https://jxsboston.github.io/IoT-Kids/
 
 import serial, sys
 
