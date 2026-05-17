@@ -18,9 +18,4 @@ A user study with 116 participants shows that the method is effective even for n
 - 2026 Massachusetts Science & Engineering Fair (MSEF), Wocester, MA, April 2026. 
     - 1st Place (MathWorks First Place Award)
 
-## Presentations
-
-4th Grand Prize in Software Design
-
-and 4th ACM (Association for Computing Machinery) Special Award, International Science & Engineering Fair (ISEF), May 2026; 1st Place (MathWorks First Place Award), Massachusetts Science & Engineering Fair (MSEF), April 2026.
 
