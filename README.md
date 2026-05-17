@@ -10,7 +10,17 @@ By translating astronomical data into musically coherent compositions based on m
 
 A user study with 116 participants shows that the method is effective even for novices, with consistently high accuracy across recognition tasks (92-93%). Participants also exhibit a 68 percentage-point increase in perceived connection between constellations and their music, with 91% reporting enjoyment, 77% expressing increased motivation to learn more about astronomy, and 85% agreeing that audio-visual integration enhances learning. Field testing demonstrates the feasibility of the integrated AR system, including reliable constellation identification and search, responsive spatial audio rendering, and immersive audio-guided exploration under nighttime observation conditions.
 
+## Awards
+
+- 2026 International Science & Engineering Fair (ISEF):
+    - 4th Place Grand Award in Software Design
+    - 4th Place ACM (Association for Computing Machinery) Special Award
+- 2026 Massachusetts Science & Engineering Fair (MSEF):
+    - 1st Place (MathWorks First Place Award)
+
 ## Presentations
 
+4th Grand Prize in Software Design
 
+and 4th ACM (Association for Computing Machinery) Special Award, International Science & Engineering Fair (ISEF), May 2026; 1st Place (MathWorks First Place Award), Massachusetts Science & Engineering Fair (MSEF), April 2026.
 
