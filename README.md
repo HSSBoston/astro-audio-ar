@@ -9,3 +9,8 @@ This project advances audio augmentation in augmented reality (AR) by developing
 By translating astronomical data into musically coherent compositions based on music-theoretic principles (e.g., tonality and functional harmony), the method allows learners to perceive and explore celestial objects through auditory modalities. An accompanying AR device extends this experience beyond the classroom by supporting immersive interaction with celestial objects under the night sky through a virtual spatial soundscape. The device performs real-time object identification and audio-guided search by rendering three-dimensional sounds that appear to originate from celestial objects.
 
 A user study with 116 participants shows that the method is effective even for novices, with consistently high accuracy across recognition tasks (92-93%). Participants also exhibit a 68 percentage-point increase in perceived connection between constellations and their music, with 91% reporting enjoyment, 77% expressing increased motivation to learn more about astronomy, and 85% agreeing that audio-visual integration enhances learning. Field testing demonstrates the feasibility of the integrated AR system, including reliable constellation identification and search, responsive spatial audio rendering, and immersive audio-guided exploration under nighttime observation conditions.
+
+## Presentations
+
+
+
