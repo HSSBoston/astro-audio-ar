@@ -13,9 +13,9 @@ A user study with 116 participants shows that the method is effective even for n
 ## Awards
 
 - 2026 International Science & Engineering Fair (ISEF), Phoenix, AZ, May 2026. 
-    - 4th Place Grand Award in Software Design
-    - 4th Place ACM (Association for Computing Machinery) Special Award
+    - [4th Place Grand Award in Software Design](https://isef.net/project/sftd061-audio-augmented-reality-for-celestial-objects)
+    - [4th Place ACM (Association for Computing Machinery) Special Award](https://isef.net/project/sftd061-audio-augmented-reality-for-celestial-objects)
 - 2026 Massachusetts Science & Engineering Fair (MSEF), Wocester, MA, April 2026. 
-    - 1st Place (MathWorks First Place Award)
+    - [1st Place (MathWorks First Place Award)](https://scifair.com/wp-content/uploads/2026/04/2026-MSEF-High-School-Award-Winners.pdf)
 
 
