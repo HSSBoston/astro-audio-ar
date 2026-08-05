@@ -18,4 +18,7 @@ A user study with 116 participants shows that the method is effective even for n
 - 2026 Massachusetts Science & Engineering Fair (MSEF), Wocester, MA, April 2026. 
     - [1st Place (MathWorks First Place Award)](https://scifair.com/wp-content/uploads/2026/04/2026-MSEF-High-School-Award-Winners.pdf)
 
+## Publications
+
+- Hanna Suzuki, "Audio Augmented Reality for Celestial Objects through Music-theoretic and Spatial Sonification," In Proc. of 5th EAI Conference on Computer Science and Education in Computer Science​​ (CSECS), Boston, MA, November 2026. to appear. preprint
 
