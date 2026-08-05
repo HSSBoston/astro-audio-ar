@@ -20,5 +20,5 @@ A user study with 116 participants shows that the method is effective even for n
 
 ## Publications
 
-- Hanna Suzuki, "Audio Augmented Reality for Celestial Objects through Music-theoretic and Spatial Sonification," In Proc. of 5th EAI Conference on Computer Science and Education in Computer Science​​ (CSECS), Boston, MA, November 2026. to appear. preprint
+- Hanna Suzuki, "Audio Augmented Reality for Celestial Objects through Music-theoretic and Spatial Sonification," In *Proc. of 5th EAI Conference on Computer Science and Education in Computer Science​​ (CSECS)*, Boston, MA, November 2026. to appear. preprint
 
