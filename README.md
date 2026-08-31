@@ -24,6 +24,7 @@ A user study with 116 participants shows that the method is effective even for n
 
 ## Media Coverage
 
+- Association for Computing Machinery's Committee on Women in Computing (ACM-W), [Celebrating ACM’s 2026 Regeneron ISEF Special Award Winners](https://women.acm.org/celebrating-acms-2026-regeneron-isef-special-award-winners/), ACM-W Newsletter, August 2026. 
 - The Bedford Citizen, ["Suzuki Wins Awards at Science and Engineering Fair"](https://thebedfordcitizen.org/2026/05/suzuki-wins-awards-at-science-and-engineering-fair/), May 2026. 
 
 
