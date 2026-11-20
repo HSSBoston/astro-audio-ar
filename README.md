@@ -18,13 +18,13 @@ A user study with 116 participants shows that the method is effective even for n
 - 2026 Massachusetts Science & Engineering Fair (MSEF), Wocester, MA, April 2026. 
     - [1st Place (MathWorks First Place Award)](https://scifair.com/wp-content/uploads/2026/04/2026-MSEF-High-School-Award-Winners.pdf)
 
-## Publications
+## Confernece Papers
 
 - Hanna Suzuki, "Audio Augmented Reality for Celestial Objects through Music-theoretic and Spatial Sonification," In *Proc. of 22nd EAI Conference on Computer Science and Education in Computer Science​​ (CSECS)*, Springer, ISBN: 978-3-032-42319-1, Boston, MA, November 2026 (30% acceptance rate). [publisher page](https://link.springer.com/book/9783032423191), [preprint](./docs/csecs26-final.pdf), [presentation slides](https://docs.google.com/presentation/d/1mo0Coa2AX8BYjlCqSrBLEARgqmjaohy1HZyIycYp9T4/edit?usp=sharing), video. 
 
-## Presentations
+## Conference Presentation Abstracts
 - Hanna Suzuki, "Music-Theoretic Sonification and Spatial Audio Augmented Reality for Astronomy," In *Proc. of 2027 American Junior Academy of Science Annual Conference (AJAS 2027)*, poster presentation abstract, Chicago, IL, February 2027. publisher page, [preprint](./docs/ajas27.pdf).
-- Hanna Suzuki, "Hearing is Discovering: Audio Augmented Reality for Celestial Objects through Music-theoretic and Spatial Sonification," *MAssJAS 2026 Fall Symposium*, Massachusetts Junior Academy of Sciences, Cambridge, MA, October 2027. [presentation slides](https://docs.google.com/presentation/d/1fvhpnLsKq87LfGogj8MCp0LPj7BaUKAlA2OxEm1pDe0/edit?usp=sharing)
+- Hanna Suzuki, "Hearing is Discovering: Audio Augmented Reality for Celestial Objects through Music-theoretic and Spatial Sonification," *Massachusetts Junior Academy of Sciences 2026 Fall Symposium*, oral presentation abstract, Cambridge, MA, October 2027. preprint, [presentation slides](https://docs.google.com/presentation/d/1fvhpnLsKq87LfGogj8MCp0LPj7BaUKAlA2OxEm1pDe0/edit?usp=sharing)
 
 
 ## Media Coverage
