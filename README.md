@@ -24,7 +24,7 @@ A user study with 116 participants shows that the method is effective even for n
 
 ## Conference Presentation Abstracts
 - Hanna Suzuki, "Music-Theoretic Sonification and Spatial Audio Augmented Reality for Astronomy," In *Proc. of 2027 American Junior Academy of Science Annual Conference (AJAS 2027)*, poster presentation abstract, Chicago, IL, February 2027. publisher page, [preprint](./docs/ajas27.pdf).
-- Hanna Suzuki, "Hearing is Discovering: Audio Augmented Reality for Celestial Objects through Music-theoretic and Spatial Sonification," *Massachusetts Junior Academy of Sciences 2026 Fall Symposium (MAssJAS 2026 Fall)*, oral presentation abstract, Cambridge, MA, October 2027. preprint, [presentation slides](https://docs.google.com/presentation/d/1fvhpnLsKq87LfGogj8MCp0LPj7BaUKAlA2OxEm1pDe0/edit?usp=sharing)
+- Hanna Suzuki, "Hearing is Discovering: Audio Augmented Reality for Celestial Objects through Music-theoretic and Spatial Sonification," *Massachusetts Junior Academy of Sciences 2026 Fall Symposium (MAssJAS 2026 Fall)*, oral presentation abstract, Cambridge, MA, October 2027. [preprint](./docs/MAssJAS2026.pdf), [presentation slides](https://docs.google.com/presentation/d/1fvhpnLsKq87LfGogj8MCp0LPj7BaUKAlA2OxEm1pDe0/edit?usp=sharing)
 
 
 ## Media Coverage
