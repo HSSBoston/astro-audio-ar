@@ -20,7 +20,7 @@ A user study with 116 participants shows that the method is effective even for n
 
 ## Confernece Papers
 
-- Hanna Suzuki, "Audio Augmented Reality for Celestial Objects through Music-theoretic and Spatial Sonification," In *Proc. of 22nd EAI Conference on Computer Science and Education in Computer Science​​ (CSECS)*, Springer, ISBN: 978-3-032-42319-1, Boston, MA, November 2026 (30% acceptance rate). [publisher page](https://link.springer.com/book/9783032423191), [preprint](./docs/csecs26-final.pdf), [presentation slides](https://docs.google.com/presentation/d/1mo0Coa2AX8BYjlCqSrBLEARgqmjaohy1HZyIycYp9T4/edit?usp=sharing), video. 
+- Hanna Suzuki, "Audio Augmented Reality for Celestial Objects through Music-theoretic and Spatial Sonification," In *Proc. of 22nd EAI Conference on Computer Science and Education in Computer Science​​ (CSECS)*, oral presentation paper, pp. 464-476, Springer, ISBN: 978-3-032-42319-1, Boston, MA, November 2026 (30% acceptance rate). [publisher page](https://link.springer.com/book/9783032423191), [preprint](./docs/csecs26-final.pdf), [presentation slides](https://docs.google.com/presentation/d/1mo0Coa2AX8BYjlCqSrBLEARgqmjaohy1HZyIycYp9T4/edit?usp=sharing), video. 
 
 ## Conference Presentation Abstracts
 - Hanna Suzuki, "Music-Theoretic Sonification and Spatial Audio Augmented Reality for Astronomy," In *Proc. of 2027 American Junior Academy of Science Annual Conference (AJAS 2027)*, poster presentation abstract, Chicago, IL, February 2027. publisher page, [preprint](./docs/ajas27.pdf).
